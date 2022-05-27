@@ -16,7 +16,6 @@ function App() {
       <Navigate to="/" />
     );
   }
-  console.log(window.localStorage.getItem("user"));
   return (
     <Router>
       <Routes>
