@@ -1,12 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
-import Login from './component/login';
+import "./App.css";
+import Login from "./component/login";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import Dashboard from "./component/dashboard";
 
 function App() {
+  function PrivateRoute({ children }) {
+    return window.localStorage.getItem("user") !== null ? (
+      children
+    ) : (
+      <Navigate to="/" />
+    );
+  }
+  console.log(window.localStorage.getItem("user"));
   return (
-    <div>
-      <Login />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 

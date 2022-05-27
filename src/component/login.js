@@ -1,122 +1,132 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "antd/dist/antd.min.css";
-import { Form, Input, Button, Checkbox, Radio, Row } from "antd";
-import Icon, { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Checkbox, Radio, Row, Col } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AES } from "crypto-js";
 import axios from "axios";
+import { createBrowserHistory } from "history";
 
 export default function Login() {
   const [form] = Form.useForm();
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("Student");
-  const [post, setPost] = useState(null);
+  const [role, setRole] = useState("student");
 
-  const baseURL = "http://cms.chtoma.com/api/login";
-
-  const psChange = (e) => {
-    setPassword(e.target.value);
-
-  };
-  const roleChange = (e) => {
-    setRole(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    form.submit();
-  };
+  const loginURL = "http://cms.chtoma.com/api/login";
 
   const onFinish = (values) => {
     values.password = AES.encrypt(password, "cms").toString();
     values.role = role;
     axios
-    .post(baseURL, {
-      "email": values.email,
-      "password": values.password,
-      "role": values.role,
-    })
-    .then((response) => {
-      setPost(response.data);
-    });
-  window.localStorage.setItem(`${values.email}`, {
-    "email": values.email,
-    "password": values.password,
-    "role": values.role,
-  });
-    console.log(post===null ? "no post" : post)
+      .post(loginURL, {
+        email: values.email,
+        password: values.password,
+        role: values.role,
+      })
+      .then((response) => {
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify({
+            email: values.email,
+            password: values.password,
+            role: values.role,
+          })
+        );
+
+        let history = createBrowserHistory();
+        history.push({
+          pathname: "/dashboard",
+        });
+        history.go();
+      })
+      .catch((error) => {
+        alert("Please check your email or password and try again!");
+      });
   };
   return (
     <Row type="flex" justify="center" style={{ minHeight: "100vh" }}>
-      <Form
-        form={form}
-        className="login-form"
-        style={{ margin: 200, position: "flex", width: "40%" }}
-        onFinish={onFinish}
-      >
-        <h2 style={{ textAlign: "center", fontWeight: 600, fontSize: 30 }}>
-          COURSE MANAGEMENT ASSISTANT
-        </h2>
-        <Form.Item name="role">
-          <Radio.Group defaultValue={role} value={role} onChange={roleChange}>
-            <Radio.Button value="Student">Student</Radio.Button>
-            <Radio.Button value="Teacher">Teacher</Radio.Button>
-            <Radio.Button value="Manager">Manager</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-
-        <Form.Item
-          name="email"
-          rules={[
-            { required: true, message: "Please input your email!" },
-            {
-              type: "email",
-              message: "Please confirm the type of your email!",
-            },
-          ]}
+      <Col md={8} sm={24}>
+        <Form
+          form={form}
+          className="login-form"
+          style={{ marginTop: 200 }}
+          onFinish={onFinish}
         >
-          <Input prefix={<UserOutlined />} placeholder="Please input email!" />
-        </Form.Item>
+          <h2 style={{ textAlign: "center", fontWeight: 600, fontSize: 30 }}>
+            COURSE MANAGEMENT ASSISTANT
+          </h2>
+          <Form.Item name="role">
+            <Radio.Group
+              defaultValue={role}
+              value={role}
+              onChange={(e) => {
+                setRole(e.target.value);
+              }}
+            >
+              <Radio.Button value="student">Student</Radio.Button>
+              <Radio.Button value="teacher">Teacher</Radio.Button>
+              <Radio.Button value="manager">Manager</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
 
-        <Form.Item
-          name="password"
-          rules={[
-            { required: true, message: "Please input your password!" },
-            {
-              max: 16,
-              min: 4,
-              message:
-                "The size of the password must be between 4 and 16 digits!",
-            },
-            {
-              pattern: new RegExp("^[0-9a-zA-Z_]{1,}$", "g"),
-              message: "Only allow numbers, letters and underscores!",
-            },
-          ]}
-        >
-          <Input
-            prefix={<LockOutlined />}
-            type="password"
-            placeholder="Please input password!"
-            value={password}
-            onChange={psChange}
-          />
-        </Form.Item>
-
-        <Form.Item>
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-            style={{ width: "100%" }}
-            onClick={handleSubmit}
+          <Form.Item
+            name="email"
+            rules={[
+              { required: true, message: "Please input your email!" },
+              {
+                type: "email",
+                message: "Please confirm the type of your email!",
+              },
+            ]}
           >
-            Sign in
-          </Button>
-        </Form.Item>
-      </Form>
+            <Input prefix={<UserOutlined />} placeholder="Please input email" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            rules={[
+              { required: true, message: "Please input your password!" },
+              {
+                max: 16,
+                min: 4,
+                message:
+                  "The size of the password must be between 4 and 16 digits!",
+              },
+              {
+                pattern: new RegExp("^[0-9a-zA-Z_]{1,}$", "g"),
+                message: "Only allow numbers, letters and underscores!",
+              },
+            ]}
+          >
+            <Input
+              prefix={<LockOutlined />}
+              type="password"
+              placeholder="Please input password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+              style={{ width: "100%" }}
+              onClick={() => {
+                form.submit();
+              }}
+            >
+              Sign in
+            </Button>
+          </Form.Item>
+        </Form>
+      </Col>
     </Row>
   );
 }
