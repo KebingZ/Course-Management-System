@@ -15,7 +15,7 @@ export default function Login() {
 
   const onFinish = (values) => {
     values.password = AES.encrypt(password, "cms").toString();
-    values.role = role;
+    // values.role = role;
     axios
       .post(loginURL, {
         email: values.email,
@@ -29,12 +29,12 @@ export default function Login() {
             email: values.email,
             password: values.password,
             role: values.role,
+            token: response.data.data.token,
           })
         );
-
         let history = createBrowserHistory();
         history.push({
-          pathname: "/dashboard",
+          pathname: `/dashboard/${values.role}`,
         });
         history.go();
       })

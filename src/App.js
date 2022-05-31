@@ -7,6 +7,13 @@ import {
   Navigate,
 } from "react-router-dom";
 import Dashboard from "./component/dashboard";
+import LayoutPage from "./component/layout";
+import StudentList from "./component/studentList";
+
+const user =
+  window.localStorage.getItem("user") !== null
+    ? JSON.parse(window.localStorage.getItem("user"))
+    : null;
 
 function App() {
   function PrivateRoute({ children }) {
@@ -21,10 +28,18 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route
-          path="/dashboard"
+          path={user ? `/dashboard/${user.role}` : "/"}
           element={
             <PrivateRoute>
-              <Dashboard />
+              <LayoutPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={user ? `/dashboard/${user.role}/students` : "/"}
+          element={
+            <PrivateRoute>
+              <StudentList />
             </PrivateRoute>
           }
         />
