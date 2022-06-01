@@ -16,6 +16,7 @@ import StudentList from "./studentList";
 import SubMenu from "antd/lib/menu/SubMenu";
 import axios from "axios";
 import { createBrowserHistory } from "history";
+import Dashboard from "./dashboard";
 
 const { Header, Sider, Content } = Layout;
 
@@ -62,12 +63,12 @@ const LayoutPage = () => {
     setPage(<StudentList />);
   };
   return (
-    <Layout>
+    <Layout style={{ height: "100%" }}>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{ position: "fixed", zIndex: 1, height: "100%" }}
+        style={{ position: "sticky"}}
       >
         <div className="logo" />
         <h3
@@ -113,7 +114,8 @@ const LayoutPage = () => {
           style={{
             padding: 0,
             position: "sticky",
-            width: "100%",
+            top:0,
+            backgroundColor:"#001529"
           }}
         >
           {React.createElement(
@@ -122,8 +124,7 @@ const LayoutPage = () => {
               className: "trigger",
               onClick: () => setCollapsed(!collapsed),
               style: {
-                color: "white",
-                fontSize: "20px",
+                color: 'white',
               },
             }
           )}
@@ -153,15 +154,12 @@ const LayoutPage = () => {
         <Content
           className="site-layout-background"
           style={{
-            marginTop: "80px",
-            marginBottom: "80px",
-            marginRight: "50px",
-            marginLeft: "240px",
+            margin: '24px 16px',
             padding: 24,
             minHeight: 280,
           }}
         >
-          {page}
+          <Dashboard />
         </Content>
       </Layout>
     </Layout>
