@@ -17,6 +17,13 @@ import SubMenu from "antd/lib/menu/SubMenu";
 import axios from "axios";
 import { createBrowserHistory } from "history";
 import Dashboard from "./dashboard";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+  Link,
+} from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 
@@ -54,21 +61,51 @@ const LayoutPage = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [page, setPage] = useState("");
 
-  const handleStudentList = (key) => {
-    // let history = createBrowserHistory();
-    // history.push({
-    //   pathname: `/dashboard/${user.role}/students`,
-    // });
-    // history.go();
+  const listURL = "http://cms.chtoma.com/api/students?page=1&limit=20";
+  const handleStudentList = () => {
+    axios
+      .get(listURL, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((response) => {
+        response.data.data.students = response.data.data.students.map(
+          (student) => {
+            student.courseList = student.courses.map((course) => {
+              return course.name;
+            });
+            delete student.courses;
+            return student;
+          }
+        );
+        response.data.data.students = response.data.data.students.map(
+          (student) => {
+            student.type = student.type.name;
+            return student;
+          }
+        );
+        window.localStorage.setItem(
+          "students",
+          JSON.stringify(response.data.data)
+        );
+      })
+      .catch((error) => {
+        alert(error);
+      });
     setPage(<StudentList />);
   };
   return (
-    <Layout style={{ height: "100%" }}>
+    <Layout style={{ flexDirection: "row", boxSizing: "border-box" }}>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
-        style={{ position: "sticky"}}
+        style={{
+          flex: "none",
+          padding: 0,
+          overflowY: "auto",
+        }}
       >
         <div className="logo" />
         <h3
@@ -94,7 +131,7 @@ const LayoutPage = () => {
               icon={<TeamOutlined />}
               onClick={handleStudentList}
             >
-              Student List
+              <Link to={`/dashboard/${user.role}/students`}>Student List</Link>
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="teacher" icon={<DeploymentUnitOutlined />}>
@@ -114,8 +151,9 @@ const LayoutPage = () => {
           style={{
             padding: 0,
             position: "sticky",
-            top:0,
-            backgroundColor:"#001529"
+            top: 0,
+            backgroundColor: "#001529",
+            zIndex: 1,
           }}
         >
           {React.createElement(
@@ -124,7 +162,7 @@ const LayoutPage = () => {
               className: "trigger",
               onClick: () => setCollapsed(!collapsed),
               style: {
-                color: 'white',
+                color: "white",
               },
             }
           )}
@@ -154,12 +192,13 @@ const LayoutPage = () => {
         <Content
           className="site-layout-background"
           style={{
-            margin: '24px 16px',
+            margin: "24px 16px",
             padding: 24,
             minHeight: 280,
+            height: "100%",
           }}
         >
-          <Dashboard />
+          {page}
         </Content>
       </Layout>
     </Layout>

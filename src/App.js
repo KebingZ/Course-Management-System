@@ -5,6 +5,7 @@ import {
   Route,
   Routes,
   Navigate,
+  Outlet,
 } from "react-router-dom";
 import Dashboard from "./component/dashboard";
 import LayoutPage from "./component/layout";
@@ -16,33 +17,23 @@ const user =
     : null;
 
 function App() {
-  function PrivateRoute({ children }) {
-    return window.localStorage.getItem("user") !== null ? (
-      children
-    ) : (
-      <Navigate to="/" />
-    );
+  function PrivateRoute({ user, redirectPath = "/" }) {
+    if (!user) {
+      return <Navigate to={redirectPath} replace />;
+    }
+    return <Outlet />;
   }
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route
-          path={user ? `/dashboard/${user.role}` : "/"}
-          element={
-            <PrivateRoute>
-              <LayoutPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={user ? `/dashboard/${user.role}/students` : "/"}
-          element={
-            <PrivateRoute>
-              <StudentList />
-            </PrivateRoute>
-          }
-        />
+        <Route element={<PrivateRoute user={user} />}>
+          <Route path={`dashboard/${user.role}`} element={<LayoutPage />} />
+          <Route
+            path={`dashboard/${user.role}/students`}
+            element={<LayoutPage />}
+          />
+        </Route>
       </Routes>
     </Router>
   );

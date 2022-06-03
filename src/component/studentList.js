@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { Table, Input, Button, Popconfirm, Form } from "antd";
-import axios from "axios";
+import { formatDistanceToNow } from "date-fns";
 
 const EditableContext = React.createContext(null);
 
@@ -84,26 +84,30 @@ const EditableCell = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
-const listURL = "http://cms.chtoma.com/api/students?page=1&limit=20";
-
-const user = JSON.parse(window.localStorage.getItem("user"));
-const data = () => {
-  axios
-    .get(listURL, {
-      headers: {
-        Authorization: "Bearer" + user.token,
-      },
-    })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      alert(error);
-    });
-};
+const getRandomuserParams = (params) => ({
+  results: params.pagination?.pageSize,
+  page: params.pagination?.current,
+  ...params,
+});
 
 const StudentList = () => {
-  const [dataSource, setDataSource] = useState(data);
+  const user = JSON.parse(window.localStorage.getItem("user"));
+  const [dataSource, setDataSource] = useState(
+    JSON.parse(
+      window.localStorage.getItem("students")
+        ? window.localStorage.getItem("students")
+        : null
+    )
+  );
+  console.log(dataSource);
+
+  dataSource.students.map((student) => {
+    student.createdAt = formatDistanceToNow(new Date(student.createdAt), {
+      addSuffix: true,
+    });
+    return student;
+  });
+
   const [count, setCount] = useState(2);
 
   const handleDelete = (key) => {
@@ -113,22 +117,39 @@ const StudentList = () => {
 
   const defaultColumns = [
     {
+      title: "id",
+      dataIndex: "id",
+      editable: false,
+    },
+    {
       title: "name",
       dataIndex: "name",
+      sorter: true,
       width: "30%",
       editable: true,
     },
     {
-      title: "age",
-      dataIndex: "age",
+      title: "country",
+      dataIndex: "country",
     },
     {
-      title: "address",
-      dataIndex: "address",
+      title: "email",
+      dataIndex: "email",
+    },
+    {
+      title: "Selected Curriculum",
+      dataIndex: `courseList`,
+    },
+    {
+      title: "Student Type",
+      dataIndex: "type",
+    },
+    {
+      title: "Join Time",
+      dataIndex: "createdAt",
     },
     {
       title: "operation",
-      dataIndex: "operation",
       render: (_, record) =>
         dataSource.length >= 1 ? (
           <Popconfirm
@@ -141,16 +162,15 @@ const StudentList = () => {
     },
   ];
 
-  const handleAdd = () => {
-    const newData = {
-      key: count,
-      name: `Edward King ${count}`,
-      age: "32",
-      address: `London, Park Lane no. ${count}`,
-    };
-    setDataSource([...dataSource, newData]);
-    setCount(count + 1);
-  };
+  // const handleAdd = () => {
+  //   const newData = {
+
+  //   };
+  //   setDataSource([...dataSource.students, newData]);
+  //   setCount(count + 1);
+  // };
+
+  const { Search } = Input;
 
   const handleSave = (row) => {
     const newData = [...dataSource];
@@ -185,7 +205,7 @@ const StudentList = () => {
   return (
     <div>
       <Button
-        onClick={handleAdd}
+        // onClick={handleAdd}
         type="primary"
         style={{
           marginBottom: 16,
@@ -193,11 +213,16 @@ const StudentList = () => {
       >
         Add a row
       </Button>
+      <Search
+        placeholder="input search text"
+        style={{ float: "right", width: "20%" }}
+        enterButton
+      />
       <Table
         components={components}
         rowClassName={() => "editable-row"}
         bordered
-        dataSource={dataSource}
+        dataSource={dataSource.students}
         columns={columns}
       />
     </div>
