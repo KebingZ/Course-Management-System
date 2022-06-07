@@ -17,7 +17,7 @@ const user =
     : null;
 
 function App() {
-  function PrivateRoute({ user, redirectPath = "/" }) {
+  function PrivateRoute({ user, redirectPath = "/login" }) {
     if (!user) {
       return <Navigate to={redirectPath} replace />;
     }
@@ -26,13 +26,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route element={<PrivateRoute user={user} />}>
-          <Route path={`dashboard/${user.role}`} element={<LayoutPage />} />
+          <Route path="dashboard/manager"element={<LayoutPage />} >
           <Route
-            path={`dashboard/${user.role}/students`}
-            element={<LayoutPage />}
+            path="students"
+            element={<StudentList />}
           />
+          </Route>
         </Route>
       </Routes>
     </Router>

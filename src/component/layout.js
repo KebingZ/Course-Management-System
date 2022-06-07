@@ -23,7 +23,9 @@ import {
   Routes,
   Navigate,
   Link,
+  Outlet,
 } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 
 const { Header, Sider, Content } = Layout;
 
@@ -57,54 +59,61 @@ const handleLogout = () => {
     });
 };
 
+const listURL = "http://cms.chtoma.com/api/students?page=3&limit=50";
+export const handleStudentList = () => {
+  axios
+    .get(listURL, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+    .then((response) => {
+      response.data.data.students = response.data.data.students.map(
+        (student) => {
+          student.courseList = student.courses.map((course) => {
+            return course.name;
+          });
+          delete student.courses;
+          return student;
+        }
+      );
+      response.data.data.students = response.data.data.students.map(
+        (student) => {
+          student.type = student.type.name;
+          student.createdAt = formatDistanceToNow(new Date(student.updatedAt), {
+            addSuffix: true,
+          });
+          return student;
+        }
+      );
+      window.localStorage.setItem(
+        "students",
+        JSON.stringify(response.data.data)
+      );
+    })
+    .catch((error) => {
+      alert(error);
+    });
+
+};
+
 const LayoutPage = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [page, setPage] = useState("");
 
-  const listURL = "http://cms.chtoma.com/api/students?page=1&limit=20";
-  const handleStudentList = () => {
-    axios
-      .get(listURL, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      })
-      .then((response) => {
-        response.data.data.students = response.data.data.students.map(
-          (student) => {
-            student.courseList = student.courses.map((course) => {
-              return course.name;
-            });
-            delete student.courses;
-            return student;
-          }
-        );
-        response.data.data.students = response.data.data.students.map(
-          (student) => {
-            student.type = student.type.name;
-            return student;
-          }
-        );
-        window.localStorage.setItem(
-          "students",
-          JSON.stringify(response.data.data)
-        );
-      })
-      .catch((error) => {
-        alert(error);
-      });
-    setPage(<StudentList />);
-  };
+
   return (
-    <Layout style={{ flexDirection: "row", boxSizing: "border-box" }}>
+    <Layout style={{ minHeight:"100vh" }}>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
         style={{
-          flex: "none",
+          top:0,
+          left:0,
           padding: 0,
           overflowY: "auto",
+          position:"sticky",
+          height:"100vh"
         }}
       >
         <div className="logo" />
@@ -131,7 +140,7 @@ const LayoutPage = () => {
               icon={<TeamOutlined />}
               onClick={handleStudentList}
             >
-              <Link to={`/dashboard/${user.role}/students`}>Student List</Link>
+              <Link to="students">Student List</Link>
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="teacher" icon={<DeploymentUnitOutlined />}>
@@ -198,7 +207,8 @@ const LayoutPage = () => {
             height: "100%",
           }}
         >
-          {page}
+          {/* {page} */}
+          <Outlet />
         </Content>
       </Layout>
     </Layout>
