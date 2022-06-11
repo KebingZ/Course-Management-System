@@ -28,11 +28,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route element={<PrivateRoute user={user} />}>
-          <Route path="dashboard/manager"element={<LayoutPage />} >
-          <Route
-            path="students"
-            element={<StudentList />}
-          />
+          <Route path="dashboard/manager" element={<LayoutPage />}>
+            <Route path="students" element={<StudentList />} />
           </Route>
         </Route>
       </Routes>

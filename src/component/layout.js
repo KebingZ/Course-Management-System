@@ -59,61 +59,60 @@ const handleLogout = () => {
     });
 };
 
-const listURL = "http://cms.chtoma.com/api/students?page=3&limit=50";
-export const handleStudentList = () => {
-  axios
-    .get(listURL, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    })
-    .then((response) => {
-      response.data.data.students = response.data.data.students.map(
-        (student) => {
-          student.courseList = student.courses.map((course) => {
-            return course.name;
-          });
-          delete student.courses;
-          return student;
-        }
-      );
-      response.data.data.students = response.data.data.students.map(
-        (student) => {
-          student.type = student.type.name;
-          student.createdAt = formatDistanceToNow(new Date(student.updatedAt), {
-            addSuffix: true,
-          });
-          return student;
-        }
-      );
-      window.localStorage.setItem(
-        "students",
-        JSON.stringify(response.data.data)
-      );
-    })
-    .catch((error) => {
-      alert(error);
-    });
+const listURL = "http://cms.chtoma.com/api/students?page=1&limit=30";
+// export const handleStudentList = () => {
+//   axios
+//     .get(listURL, {
+//       headers: {
+//         Authorization: `Bearer ${user.token}`,
+//       },
+//     })
+//     .then((response) => {
+//       response.data.data.students = response.data.data.students.map(
+//         (student) => {
+//           student.courseList = student.courses.map((course) => {
+//             return course.name;
+//           });
+//           delete student.courses;
+//           return student;
+//         }
+//       );
+//       response.data.data.students = response.data.data.students.map(
+//         (student) => {
+//           student.type = student.type.name;
+//           student.createdAt = formatDistanceToNow(new Date(student.updatedAt), {
+//             addSuffix: true,
+//           });
+//           return student;
+//         }
+//       );
+//       window.localStorage.setItem(
+//         "students",
+//         JSON.stringify(response.data.data)
+//       );
+//     })
+//     .catch((error) => {
+//       alert(error);
+//     });
 
-};
+// };
 
 const LayoutPage = () => {
   const [collapsed, setCollapsed] = useState(false);
 
-
   return (
-    <Layout style={{ minHeight:"100vh" }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
         style={{
-          top:0,
-          left:0,
+          top: 0,
+          left: 0,
           padding: 0,
           overflowY: "auto",
-          position:"sticky",
-          height:"100vh"
+          position: "sticky",
+          height: "100vh",
         }}
       >
         <div className="logo" />
@@ -138,7 +137,7 @@ const LayoutPage = () => {
             <Menu.Item
               key="list"
               icon={<TeamOutlined />}
-              onClick={handleStudentList}
+              // onClick={handleStudentList}
             >
               <Link to="students">Student List</Link>
             </Menu.Item>
@@ -207,7 +206,6 @@ const LayoutPage = () => {
             height: "100%",
           }}
         >
-          {/* {page} */}
           <Outlet />
         </Content>
       </Layout>
