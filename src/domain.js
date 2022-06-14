@@ -1,0 +1,1 @@
+export const endPoint = "http://cms.chtoma.com/api/"

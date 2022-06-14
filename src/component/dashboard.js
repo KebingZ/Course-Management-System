@@ -1,7 +1,6 @@
 import React from "react";
-import { Button, Col, Row, Layout, Menu, message } from "antd";
+import { Button, Col, Row } from "antd";
 import axios from "axios";
-import styled from "styled-components";
 
 export default function Dashboard() {
   const user = JSON.parse(window.localStorage.getItem("user"));

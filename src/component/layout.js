@@ -12,20 +12,14 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, Popover } from "antd";
 import React, { useState } from "react";
-import StudentList from "./studentList";
 import SubMenu from "antd/lib/menu/SubMenu";
 import axios from "axios";
 import { createBrowserHistory } from "history";
-import Dashboard from "./dashboard";
 import {
   BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
   Link,
   Outlet,
 } from "react-router-dom";
-import { formatDistanceToNow } from "date-fns";
 
 const { Header, Sider, Content } = Layout;
 
@@ -58,44 +52,6 @@ const handleLogout = () => {
       alert(error);
     });
 };
-
-const listURL = "http://cms.chtoma.com/api/students?page=1&limit=30";
-// export const handleStudentList = () => {
-//   axios
-//     .get(listURL, {
-//       headers: {
-//         Authorization: `Bearer ${user.token}`,
-//       },
-//     })
-//     .then((response) => {
-//       response.data.data.students = response.data.data.students.map(
-//         (student) => {
-//           student.courseList = student.courses.map((course) => {
-//             return course.name;
-//           });
-//           delete student.courses;
-//           return student;
-//         }
-//       );
-//       response.data.data.students = response.data.data.students.map(
-//         (student) => {
-//           student.type = student.type.name;
-//           student.createdAt = formatDistanceToNow(new Date(student.updatedAt), {
-//             addSuffix: true,
-//           });
-//           return student;
-//         }
-//       );
-//       window.localStorage.setItem(
-//         "students",
-//         JSON.stringify(response.data.data)
-//       );
-//     })
-//     .catch((error) => {
-//       alert(error);
-//     });
-
-// };
 
 const LayoutPage = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -137,7 +93,7 @@ const LayoutPage = () => {
             <Menu.Item
               key="list"
               icon={<TeamOutlined />}
-              // onClick={handleStudentList}
+
             >
               <Link to="students">Student List</Link>
             </Menu.Item>

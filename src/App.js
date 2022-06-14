@@ -7,7 +7,6 @@ import {
   Navigate,
   Outlet,
 } from "react-router-dom";
-import Dashboard from "./component/dashboard";
 import LayoutPage from "./component/layout";
 import StudentList from "./component/studentList";
 

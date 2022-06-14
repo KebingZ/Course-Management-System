@@ -13,9 +13,9 @@ import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import { endPoint } from "../domain";
 import throttle from "lodash/throttle";
+import axiosInst from "../apiService";
 
 const StudentList = () => {
-  const user = JSON.parse(window.localStorage.getItem("user"));
   const [dataSource, setDataSource] = useState([]);
   const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,17 +28,21 @@ const StudentList = () => {
   });
   const [loading, setLoading] = useState(false);
 
+  const getRandomUserParams = (params) => ({
+    pageSize: params.pagination?.pageSize,
+    current: params.pagination?.current,
+    ...params,
+  });
+
+  console.log(axiosInst);
   const getData = (params = {}) => {
     setLoading(true);
-    axios
+    axiosInst
       .get(
         endPoint +
-          `students?page=${pagination.current}&limit=${pagination.pageSize}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
+          `students?page=${getRandomUserParams(params).current}&limit=${
+            getRandomUserParams(params).pageSize
+          }`
       )
       .then((response) => {
         response.data.data.students = response.data.data.students.map(
@@ -46,7 +50,6 @@ const StudentList = () => {
             student.courseList = student.courses.map((course) => {
               return course.name;
             });
-            delete student.courses;
             return student;
           }
         );
@@ -65,7 +68,7 @@ const StudentList = () => {
         setDataSource(response.data.data);
         setPagination({
           ...params.pagination,
-          total: dataSource.total,
+          total: getRandomUserParams(params).pagination.total,
         });
       })
       .catch((error) => {
@@ -103,7 +106,6 @@ const StudentList = () => {
   };
 
   const handleOk = () => {
-    // form.submit();
     form
       .validateFields()
       .then(() => {
@@ -114,9 +116,10 @@ const StudentList = () => {
           onFinish(value);
         }
       })
-      .then(() =>{form.submit();})
+      .then(() => {
+        form.submit();
+      })
       .finally(() => {
-        
         setEditStudent();
         setIsModalVisible(false);
       });
@@ -124,23 +127,15 @@ const StudentList = () => {
 
   const onFinish = (values) => {
     setIsLoading(true);
-    axios
-      .post(
-        endPoint + "students",
-        {
-          name: values.name,
-          country: values.country,
-          email: values.email,
-          type: values.type,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      )
+    axiosInst
+      .post(endPoint + "students", {
+        name: values.name,
+        country: values.country,
+        email: values.email,
+        type: values.type,
+      })
       .then((response) => {
-        message.success(response.msg);
+        message.success(response.data.msg);
         getData({ pagination });
       })
       .catch((error) => {
@@ -150,22 +145,14 @@ const StudentList = () => {
   };
 
   const edit = (values) => {
-    axios
-      .put(
-        endPoint + "students",
-        {
-          id: values.id,
-          name: values.name,
-          country: values.country,
-          email: values.email,
-          type: values.type,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      )
+    axiosInst
+      .put(endPoint + "students", {
+        id: values.id,
+        name: values.name,
+        country: values.country,
+        email: values.email,
+        type: values.type,
+      })
       .then(() => {
         setEditStudent();
       })
@@ -177,22 +164,14 @@ const StudentList = () => {
 
   const onChange = useCallback(
     throttle((e) => {
-      axios
-        .get(
-          endPoint + "students",
-          {
-            params: {
-              query: e.target.value,
-              page: 1,
-              limit: 20,
-            },
+      axiosInst
+        .get(endPoint + "students", {
+          params: {
+            query: e.target.value,
+            page: pagination.current,
+            limit: pagination.pageSize,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        )
+        })
         .then((response) => {
           message.success("changed");
           setDataSource(response.data.data);
@@ -205,12 +184,8 @@ const StudentList = () => {
   );
 
   const handleDelete = (id) => {
-    axios
-      .delete(endPoint + `students/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      })
+    axiosInst
+      .delete(endPoint + `students/${id}`)
       .then((response) => {
         message.success(response.msg);
         getData({ pagination });
@@ -220,51 +195,64 @@ const StudentList = () => {
       });
   };
 
+  const [filteredInfo, setFilteredInfo] = useState({});
+
   const defaultColumns = [
     {
       title: "id",
       dataIndex: "id",
       editable: false,
+      key: "id",
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: "name",
       dataIndex: "name",
-      sorter: true,
       editable: true,
+      key: "name",
+      sorter: (a, b) => a.name.length - b.name.length,
     },
     {
       title: "country",
       dataIndex: "country",
+      key: "id",
     },
     {
       title: "email",
       dataIndex: "email",
+      key: "email",
     },
     {
       title: "Selected Curriculum",
-      dataIndex: `courseList`,
+      dataIndex: "courseList",
+      key: "courseList",
     },
     {
       title: "Student Type",
       dataIndex: "type",
+      key: "type",
       filters: [
         {
           text: "tester",
-          value: 1,
+          value: "tester",
         },
         {
           text: "developer",
-          value: 2,
+          value: "developer",
         },
       ],
+      filteredValue: filteredInfo.type || null,
+      onFilter: (value, record) => record.type.includes(value),
+      ellipsis: true,
     },
     {
       title: "Join Time",
       dataIndex: "createdAt",
+      key: "createdAt",
     },
     {
       title: "operation",
-
+      key: "operation",
       render: (_, student) =>
         dataSource.students.length >= 1
           ? [
@@ -274,7 +262,6 @@ const StudentList = () => {
                   setEditStudent(student);
                   setIsModalVisible(true);
                   setIsEdit(true);
-                  console.log(student);
                 }}
               >
                 Edit
@@ -293,13 +280,11 @@ const StudentList = () => {
   const { Search } = Input;
   const { Option } = Select;
 
-  const handleTableChange = (newPagination, filters, sorter) => {
+  const handleTableChange = (newPagination, filters) => {
     getData({
-      sortField: sorter.field,
-      sortOrder: sorter.order,
       pagination: newPagination,
-      ...filters,
     });
+    setFilteredInfo(filters);
   };
 
   return (
@@ -319,8 +304,8 @@ const StudentList = () => {
         onOk={handleOk}
         onCancel={() => {
           setIsModalVisible(false);
-          form.resetFields();
         }}
+        destroyOnClose
         okButtonProps={{ disabled: isLoading }}
       >
         <Form
@@ -333,8 +318,6 @@ const StudentList = () => {
             span: 16,
           }}
           initialValues={isEdit ? editStudent : {}}
-          // onFinish={onFinish}
-          // onFinishFailed={onFinishFailed}
           autoComplete="off"
           preserve={false}
         >
@@ -408,7 +391,6 @@ const StudentList = () => {
         onChange={onChange}
       />
       <Table
-        // components={components}
         rowClassName={() => "editable-row"}
         bordered
         dataSource={dataSource.students}

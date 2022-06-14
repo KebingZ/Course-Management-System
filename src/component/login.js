@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "antd/dist/antd.min.css";
-import { Form, Input, Button, Checkbox, Radio, Row, Col } from "antd";
+import { Form, Input, Button, Checkbox, Radio, Row, Col, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AES } from "crypto-js";
 import axios from "axios";
@@ -15,7 +15,7 @@ export default function Login() {
 
   const onFinish = (values) => {
     values.password = AES.encrypt(password, "cms").toString();
-    // values.role = role;
+
     axios
       .post(loginURL, {
         email: values.email,
@@ -38,8 +38,8 @@ export default function Login() {
         });
         history.go();
       })
-      .catch((error) => {
-        alert("Please check your email or password and try again!");
+      .catch(() => {
+        message.error("Please check your email or password and try again!");
       });
   };
   return (
