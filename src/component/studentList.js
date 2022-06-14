@@ -34,7 +34,6 @@ const StudentList = () => {
     ...params,
   });
 
-  console.log(axiosInst);
   const getData = (params = {}) => {
     setLoading(true);
     axiosInst
@@ -45,26 +44,6 @@ const StudentList = () => {
           }`
       )
       .then((response) => {
-        response.data.data.students = response.data.data.students.map(
-          (student) => {
-            student.courseList = student.courses.map((course) => {
-              return course.name;
-            });
-            return student;
-          }
-        );
-        response.data.data.students = response.data.data.students.map(
-          (student) => {
-            student.type = student.type.name;
-            student.createdAt = formatDistanceToNow(
-              new Date(student.updatedAt),
-              {
-                addSuffix: true,
-              }
-            );
-            return student;
-          }
-        );
         setDataSource(response.data.data);
         setPagination({
           ...params.pagination,
@@ -224,13 +203,21 @@ const StudentList = () => {
     },
     {
       title: "Selected Curriculum",
-      dataIndex: "courseList",
-      key: "courseList",
+      dataIndex: "courses",
+      key: "courses",
+      render(courses) {
+        const course = courses.map((course) => course.name);
+        return course;
+      },
     },
     {
       title: "Student Type",
       dataIndex: "type",
       key: "type",
+      render(type) {
+        type = type.name;
+        return type;
+      },
       filters: [
         {
           text: "tester",
@@ -249,6 +236,12 @@ const StudentList = () => {
       title: "Join Time",
       dataIndex: "createdAt",
       key: "createdAt",
+      render(createdAt) {
+        createdAt = formatDistanceToNow(new Date(createdAt), {
+          addSuffix: true,
+        });
+        return createdAt;
+      },
     },
     {
       title: "operation",
