@@ -26,9 +26,7 @@ export default function Login() {
         window.localStorage.setItem(
           "user",
           JSON.stringify({
-            email: values.email,
-            password: values.password,
-            role: values.role,
+            role: response.data.data.role,
             token: response.data.data.token,
           })
         );

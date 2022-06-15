@@ -215,7 +215,7 @@ const StudentList = () => {
       dataIndex: "type",
       key: "type",
       render(type) {
-        type = type.name;
+        type = type?.name;
         return type;
       },
       filters: [
@@ -229,7 +229,9 @@ const StudentList = () => {
         },
       ],
       filteredValue: filteredInfo.type || null,
-      onFilter: (value, record) => record.type.includes(value),
+      onFilter: (value, record) => {
+        if (record.type && record.type.name.includes(value)) return record;
+      },
       ellipsis: true,
     },
     {

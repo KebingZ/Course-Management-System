@@ -20,6 +20,7 @@ import {
   Link,
   Outlet,
 } from "react-router-dom";
+import axiosInst from "../apiService";
 
 const { Header, Sider, Content } = Layout;
 
@@ -27,15 +28,10 @@ const logoutURL = "http://cms.chtoma.com/api/logout";
 const user = JSON.parse(window.localStorage.getItem("user"));
 
 const handleLogout = () => {
-  axios
+  axiosInst
     .post(
       logoutURL,
       {},
-      {
-        headers: {
-          Authorization: "Bearer " + user.token,
-        },
-      }
     )
     .then((response) => {
       console.log(response.data);
@@ -44,7 +40,7 @@ const handleLogout = () => {
       window.localStorage.clear();
       let history = createBrowserHistory();
       history.push({
-        pathname: "/",
+        pathname: "/login",
       });
       history.go();
     })
