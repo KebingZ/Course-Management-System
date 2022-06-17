@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 import { endPoint } from "./domain";
 
@@ -20,5 +21,41 @@ axiosInst.interceptors.request.use((config) => {
   }
   return config;
 });
+
+export const post = (path, params) => {
+  const url = endPoint + path;
+
+  return axiosInst
+    .post(url, params)
+    .then((response) => response)
+    .catch((error) => message.error(error.message));
+};
+
+export const get = (path, params) => {
+  const url = endPoint + path;
+
+  return axiosInst
+    .get(url, params)
+    .then((response) => response)
+    .catch((error) => message.error(error.message));
+};
+
+export const put = (path, params) => {
+  const url = endPoint + path;
+
+  return axiosInst
+    .put(url, params)
+    .then((response) => response)
+    .catch((error) => message.error(error.message));
+};
+
+export const apiDelete = (path) => {
+  const url = endPoint + path;
+
+  return axiosInst
+    .delete(url)
+    .then((response) => response)
+    .catch((error) => message.error(error.message));
+};
 
 export default axiosInst;

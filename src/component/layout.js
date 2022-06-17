@@ -13,26 +13,15 @@ import {
 import { Layout, Menu, Popover } from "antd";
 import React, { useState } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
-import axios from "axios";
 import { createBrowserHistory } from "history";
-import {
-  BrowserRouter as Router,
-  Link,
-  Outlet,
-} from "react-router-dom";
-import axiosInst from "../apiService";
+import { BrowserRouter as Router, Link, Outlet } from "react-router-dom";
+import { post } from "../apiService";
 
 const { Header, Sider, Content } = Layout;
 
-const logoutURL = "http://cms.chtoma.com/api/logout";
-const user = JSON.parse(window.localStorage.getItem("user"));
 
 const handleLogout = () => {
-  axiosInst
-    .post(
-      logoutURL,
-      {},
-    )
+  post("logout", {})
     .then((response) => {
       console.log(response.data);
     })
@@ -44,9 +33,6 @@ const handleLogout = () => {
       });
       history.go();
     })
-    .catch((error) => {
-      alert(error);
-    });
 };
 
 const LayoutPage = () => {
@@ -86,11 +72,7 @@ const LayoutPage = () => {
           </Menu.Item>
 
           <SubMenu key="student" icon={<SolutionOutlined />} title="Student">
-            <Menu.Item
-              key="list"
-              icon={<TeamOutlined />}
-
-            >
+            <Menu.Item key="list" icon={<TeamOutlined />}>
               <Link to="students">Student List</Link>
             </Menu.Item>
           </SubMenu>

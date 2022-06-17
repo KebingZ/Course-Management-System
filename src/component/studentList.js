@@ -13,7 +13,7 @@ import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import { endPoint } from "../domain";
 import throttle from "lodash/throttle";
-import axiosInst from "../apiService";
+import axiosInst, { post, get, put, apiDelete } from "../apiService";
 
 const StudentList = () => {
   const [dataSource, setDataSource] = useState([]);
@@ -28,7 +28,7 @@ const StudentList = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const getRandomUserParams = (params) => ({
+  const getParams = (params) => ({
     pageSize: params.pagination?.pageSize,
     current: params.pagination?.current,
     ...params,
@@ -36,22 +36,21 @@ const StudentList = () => {
 
   const getData = (params = {}) => {
     setLoading(true);
-    axiosInst
-      .get(
-        endPoint +
-          `students?page=${getRandomUserParams(params).current}&limit=${
-            getRandomUserParams(params).pageSize
-          }`
-      )
+    get(
+      `students?page=${getParams(params).current}&limit=${
+        getParams(params).pageSize
+      }`
+    )
       .then((response) => {
+        response.data.data.students.map((student) => {
+          student.type = student.type.name
+          return student
+        })
         setDataSource(response.data.data);
         setPagination({
           ...params.pagination,
-          total: getRandomUserParams(params).pagination.total,
+          total: getParams(params).pagination.total,
         });
-      })
-      .catch((error) => {
-        message.error(error.message);
       })
       .finally(() => {
         setLoading(false);
@@ -65,14 +64,9 @@ const StudentList = () => {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(endPoint + "countries")
-      .then((response) => {
-        setCountries(response.data.data);
-      })
-      .catch((error) => {
-        message.error(error.message);
-      });
+    get("countries").then((response) => {
+      setCountries(response.data.data);
+    });
   }, []);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -106,32 +100,28 @@ const StudentList = () => {
 
   const onFinish = (values) => {
     setIsLoading(true);
-    axiosInst
-      .post(endPoint + "students", {
-        name: values.name,
-        country: values.country,
-        email: values.email,
-        type: values.type,
-      })
+    post("students", {
+      name: values.name,
+      country: values.country,
+      email: values.email,
+      type: values.type,
+    })
       .then((response) => {
         message.success(response.data.msg);
         getData({ pagination });
-      })
-      .catch((error) => {
-        message.error(error.message);
       })
       .finally(() => setIsLoading(false));
   };
 
   const edit = (values) => {
-    axiosInst
-      .put(endPoint + "students", {
-        id: values.id,
-        name: values.name,
-        country: values.country,
-        email: values.email,
-        type: values.type,
-      })
+    put("students", {
+      id: values.id,
+      name: values.name,
+      country: values.country,
+      email: values.email,
+      type: values.type,
+    })
+    .then((res) => {message.success(res.statusText)})
       .then(() => {
         setEditStudent();
       })
@@ -143,35 +133,25 @@ const StudentList = () => {
 
   const onChange = useCallback(
     throttle((e) => {
-      axiosInst
-        .get(endPoint + "students", {
-          params: {
-            query: e.target.value,
-            page: pagination.current,
-            limit: pagination.pageSize,
-          },
-        })
-        .then((response) => {
-          message.success("changed");
-          setDataSource(response.data.data);
-        })
-        .catch((error) => {
-          message.error(error.message);
-        });
+      get("students", {
+        params: {
+          query: e.target.value,
+          page: pagination.current,
+          limit: pagination.pageSize,
+        },
+      }).then((response) => {
+        message.success("changed");
+        setDataSource(response.data.data);
+      });
     }, 1000),
     []
   );
 
   const handleDelete = (id) => {
-    axiosInst
-      .delete(endPoint + `students/${id}`)
-      .then((response) => {
-        message.success(response.msg);
-        getData({ pagination });
-      })
-      .catch((error) => {
-        message.error(error.message);
-      });
+    apiDelete(`students/${id}`).then((response) => {
+      message.success(response.msg);
+      getData({ pagination });
+    });
   };
 
   const [filteredInfo, setFilteredInfo] = useState({});
@@ -215,8 +195,7 @@ const StudentList = () => {
       dataIndex: "type",
       key: "type",
       render(type) {
-        type = type?.name;
-        return type;
+        return type.name ? type.name : type;
       },
       filters: [
         {
@@ -230,7 +209,7 @@ const StudentList = () => {
       ],
       filteredValue: filteredInfo.type || null,
       onFilter: (value, record) => {
-        if (record.type && record.type.name.includes(value)) return record;
+        if (record.type && record.type.includes(value)) return record;
       },
       ellipsis: true,
     },
@@ -239,10 +218,9 @@ const StudentList = () => {
       dataIndex: "createdAt",
       key: "createdAt",
       render(createdAt) {
-        createdAt = formatDistanceToNow(new Date(createdAt), {
+        return formatDistanceToNow(new Date(createdAt), {
           addSuffix: true,
         });
-        return createdAt;
       },
     },
     {
@@ -252,7 +230,7 @@ const StudentList = () => {
         dataSource.students.length >= 1
           ? [
               <a
-                style={{ padding: "5px" }}
+                style={{ padding: "4vh", float: "left" }}
                 onClick={() => {
                   setEditStudent(student);
                   setIsModalVisible(true);
@@ -265,7 +243,7 @@ const StudentList = () => {
                 title="Sure to delete?"
                 onConfirm={() => handleDelete(student.id)}
               >
-                <a style={{ padding: "5px" }}>Delete</a>
+                <a style={{ padding: "4vh", float: "right" }}>Delete</a>
               </Popconfirm>,
             ]
           : null,
@@ -319,6 +297,7 @@ const StudentList = () => {
           <Form.Item
             label="Name"
             name="name"
+            key="name"
             rules={[
               {
                 required: true,
@@ -331,6 +310,7 @@ const StudentList = () => {
           <Form.Item
             label="Email"
             name="email"
+            key="email"
             rules={[
               {
                 required: true,
@@ -347,6 +327,7 @@ const StudentList = () => {
           <Form.Item
             label="Area"
             name="country"
+            key="country"
             rules={[
               {
                 required: true,
@@ -365,6 +346,7 @@ const StudentList = () => {
           <Form.Item
             label="Student Type"
             name="type"
+            key="type"
             rules={[
               {
                 required: true,

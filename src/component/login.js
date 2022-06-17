@@ -5,23 +5,20 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AES } from "crypto-js";
 import axios from "axios";
 import { createBrowserHistory } from "history";
+import { post } from "../apiService";
 
 export default function Login() {
   const [form] = Form.useForm();
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
 
-  const loginURL = "http://cms.chtoma.com/api/login";
-
   const onFinish = (values) => {
     values.password = AES.encrypt(password, "cms").toString();
-
-    axios
-      .post(loginURL, {
-        email: values.email,
-        password: values.password,
-        role: values.role,
-      })
+    post("login", {
+      email: values.email,
+      password: values.password,
+      role: values.role,
+    })
       .then((response) => {
         window.localStorage.setItem(
           "user",
@@ -52,7 +49,7 @@ export default function Login() {
           <h2 style={{ textAlign: "center", fontWeight: 600, fontSize: 30 }}>
             COURSE MANAGEMENT ASSISTANT
           </h2>
-          <Form.Item name="role">
+          <Form.Item name="role" key="role">
             <Radio.Group
               defaultValue={role}
               value={role}
@@ -68,6 +65,7 @@ export default function Login() {
 
           <Form.Item
             name="email"
+            key="email"
             rules={[
               { required: true, message: "Please input your email!" },
               {
@@ -81,6 +79,7 @@ export default function Login() {
 
           <Form.Item
             name="password"
+            key="password"
             rules={[
               { required: true, message: "Please input your password!" },
               {
@@ -106,11 +105,11 @@ export default function Login() {
             />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item key="rememberMe">
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item key="submit">
             <Button
               type="primary"
               htmlType="submit"
