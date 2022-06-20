@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -10,15 +11,14 @@ import {
   BellOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Popover } from "antd";
+import { Layout, Menu, Popover, Breadcrumb } from "antd";
 import React, { useState } from "react";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { createBrowserHistory } from "history";
-import { BrowserRouter as Router, Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { post } from "../apiService";
 
 const { Header, Sider, Content } = Layout;
-
 
 const handleLogout = () => {
   post("logout", {})
@@ -32,11 +32,19 @@ const handleLogout = () => {
         pathname: "/login",
       });
       history.go();
-    })
+    });
 };
 
 const LayoutPage = () => {
+  let navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+  let pathname = window.location.pathname;
+  const path = pathname
+    .toString().split("manager/")[1]?.split("/")[0];
+
+  const id = parseInt(
+    pathname.substring(pathname.lastIndexOf("/") + 1).toString()
+  );
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -56,24 +64,33 @@ const LayoutPage = () => {
         <div className="logo" />
         <h3
           style={{
-            margin: "10px",
+            marginTop: "5px",
+            marginBottom: "15px",
             color: "white",
+            height: "40px",
             textAlign: "center",
-            fontSize: 26,
+            fontSize: 35,
             fontFamily: "monospace",
-            textShadow: "2px 1px #fff",
+            textShadow: "5px 1px 5px",
+            transform: "rotateX(45deg)",
           }}
         >
           cms
         </h3>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["overview"]}>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={"overview"} selectedKeys={path ? path : "overview"} defaultOpenKeys={path ? path : null}>
           <Menu.Item key="overview" icon={<DashboardOutlined />}>
-            Overview
+            <Link to="">Overview</Link>
           </Menu.Item>
 
-          <SubMenu key="student" icon={<SolutionOutlined />} title="Student">
-            <Menu.Item key="list" icon={<TeamOutlined />}>
-              <Link to="students">Student List</Link>
+          <SubMenu key="student" icon={<SolutionOutlined />} title="Student" >
+            <Menu.Item
+              key="students"
+              icon={<TeamOutlined />}
+              onClick={() => {
+                navigate("students")
+              }}
+            >
+                Student List
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="teacher" icon={<DeploymentUnitOutlined />}>
@@ -102,6 +119,7 @@ const LayoutPage = () => {
             collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
             {
               className: "trigger",
+              key: "trigger",
               onClick: () => setCollapsed(!collapsed),
               style: {
                 color: "white",
@@ -130,7 +148,24 @@ const LayoutPage = () => {
             }}
           />
         </Header>
-
+        <Breadcrumb
+          style={{ padding: "5px", marginLeft: "10px", marginTop: "10px" }}
+        >
+          <Breadcrumb.Item>
+            <a href="/dashboard/manager">CMS MANAGER SYSTEM</a>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <a>Student</a>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <a href="/dashboard/manager/students">Student List</a>
+          </Breadcrumb.Item>
+          {id ? (
+            <Breadcrumb.Item>
+              <a href={`/dashboard/manager/students/${id}`}>{id}</a>
+            </Breadcrumb.Item>
+          ) : null}
+        </Breadcrumb>
         <Content
           className="site-layout-background"
           style={{

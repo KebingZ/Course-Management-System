@@ -1,30 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import "antd/dist/antd.min.css";
 import { Form, Input, Button, Checkbox, Radio, Row, Col, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AES } from "crypto-js";
-import axios from "axios";
 import { createBrowserHistory } from "history";
 import { post } from "../apiService";
 
 export default function Login() {
   const [form] = Form.useForm();
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("student");
-
   const onFinish = (values) => {
-    values.password = AES.encrypt(password, "cms").toString();
     post("login", {
-      email: values.email,
-      password: values.password,
       role: values.role,
+      email:values.email,
+      password: AES.encrypt(values.password, "cms").toString(),
     })
       .then((response) => {
         window.localStorage.setItem(
           "user",
           JSON.stringify({
-            role: response.data.data.role,
-            token: response.data.data.token,
+            role: response.data.role,
+            token: response.data.token,
           })
         );
         let history = createBrowserHistory();
@@ -49,14 +44,8 @@ export default function Login() {
           <h2 style={{ textAlign: "center", fontWeight: 600, fontSize: 30 }}>
             COURSE MANAGEMENT ASSISTANT
           </h2>
-          <Form.Item name="role" key="role">
-            <Radio.Group
-              defaultValue={role}
-              value={role}
-              onChange={(e) => {
-                setRole(e.target.value);
-              }}
-            >
+          <Form.Item name="role" key="role" initialValue="student">
+            <Radio.Group>
               <Radio.Button value="student">Student</Radio.Button>
               <Radio.Button value="teacher">Teacher</Radio.Button>
               <Radio.Button value="manager">Manager</Radio.Button>
@@ -98,10 +87,6 @@ export default function Login() {
               prefix={<LockOutlined />}
               type="password"
               placeholder="Please input password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
             />
           </Form.Item>
 

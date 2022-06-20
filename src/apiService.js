@@ -27,8 +27,11 @@ export const post = (path, params) => {
 
   return axiosInst
     .post(url, params)
-    .then((response) => response)
-    .catch((error) => message.error(error.message));
+    .then((response) => response.data)
+    .catch((error) => {
+      message.error(error.message);
+      return error;
+    });
 };
 
 export const get = (path, params) => {
@@ -36,8 +39,11 @@ export const get = (path, params) => {
 
   return axiosInst
     .get(url, params)
-    .then((response) => response)
-    .catch((error) => message.error(error.message));
+    .then((response) => response.data)
+    .catch((error) => {
+      message.error(error.message);
+      return error;
+    });
 };
 
 export const put = (path, params) => {
@@ -45,8 +51,11 @@ export const put = (path, params) => {
 
   return axiosInst
     .put(url, params)
-    .then((response) => response)
-    .catch((error) => message.error(error.message));
+    .then((response) => response.data)
+    .catch((error) => {
+      message.error(error.message);
+      return error;
+    });
 };
 
 export const apiDelete = (path) => {
@@ -54,8 +63,11 @@ export const apiDelete = (path) => {
 
   return axiosInst
     .delete(url)
-    .then((response) => response)
-    .catch((error) => message.error(error.message));
+    .then((response) => response.data)
+    .catch((error) => {
+      message.error(error.message);
+      return error;
+    });
 };
 
 export default axiosInst;

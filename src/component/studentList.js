@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Table,
@@ -9,11 +10,9 @@ import {
   Select,
   message,
 } from "antd";
-import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
-import { endPoint } from "../domain";
 import throttle from "lodash/throttle";
-import axiosInst, { post, get, put, apiDelete } from "../apiService";
+import { post, get, put, apiDelete } from "../apiService";
 
 const StudentList = () => {
   const [dataSource, setDataSource] = useState([]);
@@ -42,11 +41,13 @@ const StudentList = () => {
       }`
     )
       .then((response) => {
-        response.data.data.students.map((student) => {
-          student.type = student.type.name
-          return student
-        })
-        setDataSource(response.data.data);
+        response.data.students.map((student) => {
+          if (student.type) {
+            student.type = student.type.name;
+            return student;
+          }
+        });
+        setDataSource(response.data);
         setPagination({
           ...params.pagination,
           total: getParams(params).pagination.total,
@@ -65,7 +66,7 @@ const StudentList = () => {
 
   useEffect(() => {
     get("countries").then((response) => {
-      setCountries(response.data.data);
+      setCountries(response.data);
     });
   }, []);
 
@@ -107,7 +108,7 @@ const StudentList = () => {
       type: values.type,
     })
       .then((response) => {
-        message.success(response.data.msg);
+        message.success(response.msg);
         getData({ pagination });
       })
       .finally(() => setIsLoading(false));
@@ -121,7 +122,9 @@ const StudentList = () => {
       email: values.email,
       type: values.type,
     })
-    .then((res) => {message.success(res.statusText)})
+      .then((res) => {
+        message.success(res.msg);
+      })
       .then(() => {
         setEditStudent();
       })
@@ -141,7 +144,7 @@ const StudentList = () => {
         },
       }).then((response) => {
         message.success("changed");
-        setDataSource(response.data.data);
+        setDataSource(response.data);
       });
     }, 1000),
     []
@@ -170,11 +173,18 @@ const StudentList = () => {
       editable: true,
       key: "name",
       sorter: (a, b) => a.name.length - b.name.length,
+      render: (name, student) => {
+        return (
+          <a key={name} href={`students/${student.id}`}>
+            {name}
+          </a>
+        );
+      },
     },
     {
       title: "country",
       dataIndex: "country",
-      key: "id",
+      key: "country",
     },
     {
       title: "email",
@@ -195,7 +205,7 @@ const StudentList = () => {
       dataIndex: "type",
       key: "type",
       render(type) {
-        return type.name ? type.name : type;
+        return type ? type.name || type : null;
       },
       filters: [
         {
@@ -228,9 +238,10 @@ const StudentList = () => {
       key: "operation",
       render: (_, student) =>
         dataSource.students.length >= 1
-          ? [
+          ? <div>
               <a
-                style={{ padding: "4vh", float: "left" }}
+                key="edit"
+                style={{ padding: "5px", marginRight: "10px" }}
                 onClick={() => {
                   setEditStudent(student);
                   setIsModalVisible(true);
@@ -238,14 +249,19 @@ const StudentList = () => {
                 }}
               >
                 Edit
-              </a>,
+              </a>
               <Popconfirm
                 title="Sure to delete?"
                 onConfirm={() => handleDelete(student.id)}
               >
-                <a style={{ padding: "4vh", float: "right" }}>Delete</a>
-              </Popconfirm>,
-            ]
+                <a
+                  key="delete"
+                  style={{ padding: "5px" }}
+                >
+                  Delete
+                </a>
+              </Popconfirm>
+              </div>
           : null,
     },
   ];
@@ -370,6 +386,7 @@ const StudentList = () => {
       <Table
         rowClassName={() => "editable-row"}
         bordered
+        rowKey="id"
         dataSource={dataSource.students}
         columns={defaultColumns}
         pagination={pagination}

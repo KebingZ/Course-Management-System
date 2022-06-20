@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import LayoutPage from "./component/layout";
 import StudentList from "./component/studentList";
+import DetailCard from "./component/detail";
 
 const user =
   window.localStorage.getItem("user") !== null
@@ -16,6 +17,7 @@ const user =
     : null;
 
 function App() {
+
   function PrivateRoute({ user, redirectPath = "/login" }) {
     if (!user) {
       return <Navigate to={redirectPath} replace />;
@@ -29,6 +31,7 @@ function App() {
         <Route element={<PrivateRoute user={user} />}>
           <Route path="dashboard/manager" element={<LayoutPage />}>
             <Route path="students" element={<StudentList />} />
+            <Route path="students/:id" element={<DetailCard />} />
           </Route>
         </Route>
       </Routes>
