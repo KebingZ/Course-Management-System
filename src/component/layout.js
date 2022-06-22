@@ -39,8 +39,7 @@ const LayoutPage = () => {
   let navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   let pathname = window.location.pathname;
-  const path = pathname
-    .toString().split("manager/")[1]?.split("/")[0];
+  const path = pathname.toString().split("manager/")[1]?.split("/")[0];
 
   const id = parseInt(
     pathname.substring(pathname.lastIndexOf("/") + 1).toString()
@@ -77,20 +76,26 @@ const LayoutPage = () => {
         >
           cms
         </h3>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={"overview"} selectedKeys={path ? path : "overview"} defaultOpenKeys={path ? path : null}>
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={"overview"}
+          selectedKeys={path ? path : "overview"}
+          defaultOpenKeys={path ? path : null}
+        >
           <Menu.Item key="overview" icon={<DashboardOutlined />}>
             <Link to="">Overview</Link>
           </Menu.Item>
 
-          <SubMenu key="student" icon={<SolutionOutlined />} title="Student" >
+          <SubMenu key="student" icon={<SolutionOutlined />} title="Student">
             <Menu.Item
               key="students"
               icon={<TeamOutlined />}
               onClick={() => {
-                navigate("students")
+                navigate("students");
               }}
             >
-                Student List
+              Student List
             </Menu.Item>
           </SubMenu>
           <Menu.Item key="teacher" icon={<DeploymentUnitOutlined />}>
@@ -154,11 +159,11 @@ const LayoutPage = () => {
           <Breadcrumb.Item>
             <a href="/dashboard/manager">CMS MANAGER SYSTEM</a>
           </Breadcrumb.Item>
-          {path ?
-          <Breadcrumb.Item>
-            <a href={`/dashboard/manager/${path}`}>{path}</a>
-          </Breadcrumb.Item>
-          : null }
+          {path ? (
+            <Breadcrumb.Item>
+              <a href={`/dashboard/manager/${path}`}>{path}</a>
+            </Breadcrumb.Item>
+          ) : null}
           {id ? (
             <Breadcrumb.Item>
               <a href={`/dashboard/manager/students/${id}`}>{id}</a>
