@@ -154,12 +154,11 @@ const LayoutPage = () => {
           <Breadcrumb.Item>
             <a href="/dashboard/manager">CMS MANAGER SYSTEM</a>
           </Breadcrumb.Item>
+          {path ?
           <Breadcrumb.Item>
-            <a>Student</a>
+            <a href={`/dashboard/manager/${path}`}>{path}</a>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <a href="/dashboard/manager/students">Student List</a>
-          </Breadcrumb.Item>
+          : null }
           {id ? (
             <Breadcrumb.Item>
               <a href={`/dashboard/manager/students/${id}`}>{id}</a>
