@@ -17,6 +17,7 @@ import SubMenu from "antd/lib/menu/SubMenu";
 import { createBrowserHistory } from "history";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { post } from "../apiService";
+import { Path } from "../breadcrumbPath";
 
 const { Header, Sider, Content } = Layout;
 
@@ -160,13 +161,22 @@ const LayoutPage = () => {
             <a href="/dashboard/manager">CMS MANAGER SYSTEM</a>
           </Breadcrumb.Item>
           {path ? (
+            [
+              <Breadcrumb.Item key={path}>
+                <a>{path.substring(0, path.length - 1)}</a>
+              </Breadcrumb.Item>,
+              <Breadcrumb.Item key={Path[path]}>
+                <a href={`/dashboard/manager/${path}`}>{Path[path]}</a>
+              </Breadcrumb.Item>,
+            ]
+          ) : (
             <Breadcrumb.Item>
-              <a href={`/dashboard/manager/${path}`}>{path}</a>
+              <a href="/dashboard/manager">Overview</a>
             </Breadcrumb.Item>
-          ) : null}
-          {id ? (
+          )}
+          {path && id ? (
             <Breadcrumb.Item>
-              <a href={`/dashboard/manager/students/${id}`}>{id}</a>
+              <a href={`/dashboard/manager/${path}/${id}`}>{id}</a>
             </Breadcrumb.Item>
           ) : null}
         </Breadcrumb>

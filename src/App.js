@@ -10,6 +10,7 @@ import {
 import LayoutPage from "./component/layout";
 import StudentList from "./component/studentList";
 import DetailCard from "./component/detail";
+import Overview from "./component/overview";
 
 const user =
   window.localStorage.getItem("user") !== null
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route element={<PrivateRoute user={user} />}>
           <Route path="dashboard/manager" element={<LayoutPage />}>
+            <Route path="" element={<Overview />} />
             <Route path="students" element={<StudentList />} />
             <Route path="students/:id" element={<DetailCard />} />
           </Route>

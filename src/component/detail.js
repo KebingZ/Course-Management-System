@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Card, Row, Col, message, Tag, Table } from "antd";
+import { Avatar, Card, Row, Col, Tag, Table } from "antd";
 import { get } from "../apiService";
 
 const { Meta } = Card;
@@ -7,15 +7,11 @@ const { Meta } = Card;
 const DetailCard = () => {
   const [student, setStudent] = useState({});
   let pathname = window.location.pathname;
-  var id = pathname.substring(pathname.lastIndexOf("/") + 1).toString();
+  const id = pathname.substring(pathname.lastIndexOf("/") + 1).toString();
   useEffect(() => {
-    get(`students/${id}`)
-      .then((response) => {
-        setStudent(response.data);
-      })
-      .catch((error) => {
-        message.error(error.message);
-      })
+    get(`students/${id}`).then((response) => {
+      setStudent(response.data);
+    });
   }, [id]);
 
   const tabList = [
@@ -138,14 +134,15 @@ const DetailCard = () => {
       dataIndex: "type",
       key: "type",
       render(type) {
-        return type?.map(item => item.name)
-      }
+        return type?.map((item) => item.name);
+      },
     },
     {
       title: "Join Time",
       dataIndex: "createdAt",
       key: "createdAt",
-    },]
+    },
+  ];
   const ofCourses = (
     <div>
       <Table
@@ -156,7 +153,7 @@ const DetailCard = () => {
         columns={coursesColumns}
       />
     </div>
-  )
+  );
   const contentList = {
     About: ofAbout,
     Courses: ofCourses,
@@ -164,7 +161,7 @@ const DetailCard = () => {
   const [tabKey, setTabKey] = useState("About");
 
   return (
-    <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} >
+    <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
       <Col className="gutter-row" span={8}>
         <Card
           title={
@@ -198,10 +195,7 @@ const DetailCard = () => {
               {student.age}
             </Col>
           </Row>
-          <Row
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-            style={{ margin: "30px", textAlign: "center" }}
-          >
+          <Row style={{ margin: "30px", textAlign: "center" }}>
             <Col className="gutter-row" span={12}>
               <b>Email</b>
               <br />
@@ -213,10 +207,7 @@ const DetailCard = () => {
               {student.phone}
             </Col>
           </Row>
-          <Row
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-            style={{ margin: "30px", textAlign: "center" }}
-          >
+          <Row style={{ margin: "30px", textAlign: "center" }}>
             <Col className="gutter-row" span={24}>
               <b>Address</b>
               <br />
