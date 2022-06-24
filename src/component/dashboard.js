@@ -1,33 +1,20 @@
 import React from "react";
 import { Button, Col, Row } from "antd";
-import axios from "axios";
+import { post } from "../apiService";
 
 export default function Dashboard() {
   const user = JSON.parse(window.localStorage.getItem("user"));
   console.log(user);
-  const logoutURL = "http://cms.chtoma.com/api/logout";
 
   const handleLogout = () => {
-    axios
-      .post(
-        logoutURL,
+    post(
+        "logout",
         {},
-        {
-          headers: {
-            Authorization: "Bearer " + user.token,
-          },
-        }
       )
-      .then((response) => {
-        console.log(response.data);
-      })
       .then(() => {
         window.localStorage.clear();
         window.location.reload();
       })
-      .catch((error) => {
-        alert(error);
-      });
   };
   return (
     <>

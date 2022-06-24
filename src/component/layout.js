@@ -41,6 +41,7 @@ const LayoutPage = () => {
   const [collapsed, setCollapsed] = useState(false);
   let pathname = window.location.pathname;
   const path = pathname.toString().split("manager/")[1]?.split("/")[0];
+  console.log(path)
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -78,7 +79,7 @@ const LayoutPage = () => {
           mode="inline"
           defaultSelectedKeys={"overview"}
           selectedKeys={path ? path : "overview"}
-          defaultOpenKeys={path ? path : null}
+          defaultOpenKeys={path ? [path] : null}
         >
           <Menu.Item key="overview" icon={<DashboardOutlined />}>
             <Link to="">Overview</Link>
