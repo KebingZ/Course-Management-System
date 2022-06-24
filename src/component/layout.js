@@ -77,8 +77,8 @@ const LayoutPage = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={"overview"}
-          selectedKeys={path ? path : "overview"}
+          defaultSelectedKeys={["overview"]}
+          selectedKeys={path ? [path] : "overview"}
           defaultOpenKeys={path ? [path] : null}
         >
           <Menu.Item key="overview" icon={<DashboardOutlined />}>
