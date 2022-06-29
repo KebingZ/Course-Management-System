@@ -58,14 +58,6 @@ const Map = () => {
       },
     },
 
-    // mapNavigation: {
-    //   enabled: true,
-    //   buttonOptions: {
-    //     alignTo: "spacingBox",
-    //     x: 10,
-    //   },
-    // },
-
     colorAxis: {
       min: 0,
       stops: [

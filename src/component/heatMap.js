@@ -48,8 +48,8 @@ const HeatMap = () => {
       Friday: 0,
       Saturday: 0,
     };
-    course?.classTime[index].courses.map((course) => {
-      course?.classTime?.map((time) => {
+    course?.classTime[index].courses.forEach((course) => {
+      course?.classTime?.forEach((time) => {
         daysDict[time.split(" ")[0]] += 1;
       });
     });

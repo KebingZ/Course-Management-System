@@ -34,8 +34,8 @@ const Polygon = () => {
     return data;
   };
 
-  const getName = (data) => {
-    var arr = data?.map((item) => item.name);
+  const getMonth = (data) => {
+    const arr = data?.map((item) => item.name);
     return arr;
   };
 
@@ -52,7 +52,7 @@ const Polygon = () => {
   const getValue = (arr) => {
     const pushData = (value) => {
       let amount = 0;
-      arr?.createdAt.map((item) => {
+      arr?.createdAt.forEach((item) => {
         if (item.name === value) {
           amount = item.amount;
         }
@@ -61,7 +61,7 @@ const Polygon = () => {
     };
     let data = [];
     for (var key in month) {
-      if (getName(arr?.createdAt)?.indexOf(month[key]) > -1) {
+      if (getMonth(arr?.createdAt)?.indexOf(month[key]) > -1) {
         data.push(pushData(month[key]));
       } else {
         data.push(0);
@@ -97,7 +97,6 @@ const Polygon = () => {
       ],
 
     },
-
   
     legend: {
       layout: "horizontal",

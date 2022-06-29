@@ -18,9 +18,8 @@ const PieCharts = () => {
     } else {
       get(`statistics/${value}`).then((res) => {
         res.data.type.total = 0;
-        res.data.type.map((item) => {
+        res.data.type.forEach((item) => {
           res.data.type.total += item.amount;
-          return item;
         });
         setData(res.data);
       });
@@ -45,6 +44,7 @@ const PieCharts = () => {
       title: {
         text: title[selValue],
       },
+
       tooltip: {
         pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>",
       },
@@ -80,30 +80,20 @@ const PieCharts = () => {
   });
 
   const genderData = (data) => {
+    const total = data ? (Object.values(data.gender).reduce((a, b) => a + b)) : null;
+    
     return [
       {
         name: "male",
-        y:
-          data?.gender["male"] /
-          (data?.gender["male"] +
-            data?.gender["female"] +
-            data?.gender["unknown"]),
+        y: data?.gender["male"] / total,
       },
       {
-        name: "male",
-        y:
-          data?.gender["female"] /
-          (data?.gender["male"] +
-            data?.gender["female"] +
-            data?.gender["unknown"]),
+        name: "female",
+        y: data?.gender["female"] / total,
       },
       {
-        name: "male",
-        y:
-          data?.gender["unknown"] /
-          (data?.gender["male"] +
-            data?.gender["female"] +
-            data?.gender["unknown"]),
+        name: "unknown",
+        y: data?.gender["unknown"] / total,
       },
     ];
   };
@@ -122,9 +112,9 @@ const PieCharts = () => {
             bordered={false}
             onChange={(value) => setSelValue(value)}
           >
-            <Select.Option value="student">student type</Select.Option>
-            <Select.Option value="course">course type</Select.Option>
-            <Select.Option value="gender">gender</Select.Option>
+            <Select.Option key="student" value="student">student type</Select.Option>
+            <Select.Option key="course" value="course">course type</Select.Option>
+            <Select.Option key="gender" value="gender">gender</Select.Option>
           </Select>
         }
         style={{
@@ -134,13 +124,17 @@ const PieCharts = () => {
       >
         {selValue === "gender" ? (
           <Row>
+            
             {twoPieChart.map((item) => {
               return (
-                <Col span={12}>
+                <Col span={12} key={twoPieChart.indexOf(item)}>
+
                   <HighchartsReact highcharts={Highcharts} options={item} />
+
                 </Col>
               );
             })}
+            
           </Row>
         ) : (
           <HighchartsReact

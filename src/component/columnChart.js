@@ -17,9 +17,9 @@ const ColumnChart = () => {
 
   const getStackData = (arr, level) => {
     let data = [];
-    keys?.map((key) => {
+    keys?.forEach((key) => {
       if (arr?.skills[key]) {
-        arr?.skills[key]?.map((item) => {
+        arr?.skills[key]?.forEach((item) => {
           if (item.level === level) {
             data.push([key, item.amount]);
           }
@@ -32,7 +32,7 @@ const ColumnChart = () => {
   };
   const getInterest = (arr) => {
     let data = [];
-    arr?.interest.map((item) => {
+    arr?.interest.forEach((item) => {
       data.push(Object.values(item));
     });
     data.sort((a, b) => {

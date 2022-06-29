@@ -95,9 +95,17 @@ const LayoutPage = () => {
               Student List
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key="teacher" icon={<DeploymentUnitOutlined />}>
-            Teacher
-          </Menu.Item>
+          <SubMenu key="teacher" icon={<DeploymentUnitOutlined />} title="Teacher">
+            <Menu.Item
+              key="teachers"
+              icon={<TeamOutlined />}
+              onClick={() => {
+                navigate("teachers");
+              }}
+            >
+              Teacher List
+            </Menu.Item>
+          </SubMenu>
           <Menu.Item key="course" icon={<ReadOutlined />}>
             Course
           </Menu.Item>

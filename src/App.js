@@ -8,7 +8,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import LayoutPage from "./component/layout";
-import StudentList from "./component/studentList";
+import StudentList from "./pages/studentList";
 import DetailCard from "./component/detail";
 import Overview from "./pages/overview";
 
