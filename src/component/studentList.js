@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -11,8 +13,9 @@ import {
   message,
 } from "antd";
 import { formatDistanceToNow } from "date-fns";
-import throttle from "lodash/throttle";
+import { throttle } from "lodash";
 import { post, get, put, apiDelete } from "../apiService";
+import { useNavigate } from "react-router-dom";
 
 const StudentList = () => {
   const [dataSource, setDataSource] = useState([]);
@@ -26,6 +29,7 @@ const StudentList = () => {
     total: 300,
   });
   const [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
 
   const getParams = (params) => ({
     pageSize: params.pagination?.pageSize,
@@ -175,7 +179,9 @@ const StudentList = () => {
       sorter: (a, b) => a.name.length - b.name.length,
       render: (name, student) => {
         return (
-          <a key={name} href={`students/${student.id}`}>
+          <a key={name} onClick={() => {
+            navigate(`${student.id}`);
+          }}>
             {name}
           </a>
         );

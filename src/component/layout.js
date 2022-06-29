@@ -39,9 +39,9 @@ const handleLogout = () => {
 const LayoutPage = () => {
   let navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+  const MenuFolder = collapsed ? MenuUnfoldOutlined : MenuFoldOutlined;
   let pathname = window.location.pathname;
   const path = pathname.toString().split("manager/")[1]?.split("/")[0];
-  console.log(path)
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -117,17 +117,16 @@ const LayoutPage = () => {
             zIndex: 1,
           }}
         >
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: "trigger",
-              key: "trigger",
-              onClick: () => setCollapsed(!collapsed),
-              style: {
-                color: "white",
-              },
-            }
-          )}
+          <MenuFolder
+            className="trigger"
+            key="trigger"
+            onClick={() => {
+              setCollapsed(!collapsed);
+            }}
+            style={{
+              color: "white",
+            }}
+          />
           <Popover content={<a onClick={handleLogout}>Logout</a>}>
             <UserOutlined
               style={{

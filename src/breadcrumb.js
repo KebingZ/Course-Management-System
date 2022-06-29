@@ -19,7 +19,7 @@ export const BreadcrumbForManager = () => {
       {path ? (
         [
           <Breadcrumb.Item key={path}>
-            <a>{path.substring(0, path.length - 1)}</a>
+            {path.substring(0, path.length - 1)}
           </Breadcrumb.Item>,
           <Breadcrumb.Item key={Path[path]}>
             <a href={`/dashboard/manager/${path}`}>{Path[path]}</a>

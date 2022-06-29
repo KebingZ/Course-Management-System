@@ -1,5 +1,5 @@
 import "./App.css";
-import Login from "./component/login";
+import Login from "./pages/login";
 import {
   BrowserRouter as Router,
   Route,
@@ -10,7 +10,7 @@ import {
 import LayoutPage from "./component/layout";
 import StudentList from "./component/studentList";
 import DetailCard from "./component/detail";
-import Overview from "./component/overview";
+import Overview from "./pages/overview";
 
 const user =
   window.localStorage.getItem("user") !== null
