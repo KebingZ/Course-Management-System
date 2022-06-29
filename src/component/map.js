@@ -7,47 +7,45 @@ import { get } from "../apiService";
 import axios from "axios";
 import highchartsMap from "highcharts/modules/map";
 
-highchartsMap(Highcharts)
+highchartsMap(Highcharts);
 const Map = () => {
-    const [mapData, setMapData] = useState()
-    const [selValue, setSelValue] = useState("student")
-    const [data, setData] = useState()
-    const getData = (value) => {
-        
-          get(`statistics/${value}`).then((res) => {
-            
-            setData(res.data.country);
-            // console.log(res.data.country)
-          });
-        
-      };
-      useEffect(() => {
-        getData(selValue);
-      }, [selValue]);
-    
-    useEffect(() => {
-        axios.get("https://code.highcharts.com/mapdata/custom/world-palestine-highres.geo.json").then((res) => {
-            setMapData(res.data)
-            console.log(res.data)
-        })
-    }, [])
-    
+  const [mapData, setMapData] = useState();
+  const [selValue, setSelValue] = useState("student");
+  const [data, setData] = useState();
+  const getData = (value) => {
+    get(`statistics/${value}`).then((res) => {
+      setData(res.data.country);
+    });
+  };
+  useEffect(() => {
+    getData(selValue);
+  }, [selValue]);
 
-    const mapSource = data?.map((item) => {
-        const target = mapData?.features.find(
-          (feature) => item.name.toLowerCase() === feature.properties.name.toLowerCase()
-        );
-  
-        return !!target
-          ? {
-              'hc-key': target.properties['hc-key'],
-              value: item.amount,
-            }
-          : {};
+  useEffect(() => {
+    axios
+      .get(
+        "https://code.highcharts.com/mapdata/custom/world-palestine-highres.geo.json"
+      )
+      .then((res) => {
+        setMapData(res.data);
       });
+  }, []);
+
+  const mapSource = data?.map((item) => {
+    const target = mapData?.features.find(
+      (feature) =>
+        item.name.toLowerCase() === feature.properties.name.toLowerCase()
+    );
+
+    return !!target
+      ? {
+          "hc-key": target.properties["hc-key"],
+          value: item.amount,
+        }
+      : {};
+  });
 
   const chart = {
-
     title: {
       text: null,
     },
@@ -90,8 +88,8 @@ const Map = () => {
 
     series: [
       {
-        data:mapSource,
-        mapData:mapData,
+        data: mapSource,
+        mapData: mapData,
         name: "Total",
         states: {
           hover: {
@@ -99,7 +97,6 @@ const Map = () => {
           },
         },
         dataLabels: {
-
           style: {
             fontWeight: 100,
             fontSize: "10px",
@@ -108,7 +105,6 @@ const Map = () => {
         },
       },
       {
-        // type: "mapline",
         name: "Lines",
         accessibility: {
           enabled: false,
@@ -128,20 +124,23 @@ const Map = () => {
           marginBottom: "20px",
         }}
         extra={
-            <Select
-              defaultValue="student"
-              bordered={false}
-              onChange={(value) => setSelValue(value)}
-            >
-              <Select.Option value="student">student</Select.Option>
-              <Select.Option value="teacher">teacher</Select.Option>
-            </Select>
-          }
-        >
-      
-        <HighchartsReact highcharts={Highcharts} options={chart} />
+          <Select
+            defaultValue="student"
+            bordered={false}
+            onChange={(value) => setSelValue(value)}
+          >
+            <Select.Option value="student">student</Select.Option>
+            <Select.Option value="teacher">teacher</Select.Option>
+          </Select>
+        }
+      >
+        <HighchartsReact
+          highcharts={Highcharts}
+          constructorType={"mapChart"}
+          options={chart}
+        />
       </Card>
     </div>
   );
 };
-export default Map
+export default Map;
