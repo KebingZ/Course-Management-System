@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, Card, Row, Col, Tag, Table } from "antd";
 import { get } from "../apiService";
+import styled from "styled-components";
 
 const { Meta } = Card;
 
+const Title = styled.h2`
+  margin-bottom: 30px;
+  color: purple;
+`;
+const DetailRow = styled(Row).attrs({
+  gutter: { xs: 8, sm: 16, md: 24, lg: 32 },
+})``;
+
+const StudentRow = styled(DetailRow)`
+  margin: 30px;
+  text-align: center;
+`;
 const DetailCard = () => {
   const [student, setStudent] = useState({});
   let pathname = window.location.pathname;
@@ -36,35 +49,36 @@ const DetailCard = () => {
     "blue",
     "geekblue",
   ];
+
   const ofAbout = (
     <div>
-      <h2 style={{ marginBottom: "30px", color: "purple" }}>Information</h2>
+      <Title>Information</Title>
 
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      <DetailRow>
         <Col span={6}>
           <b>Education:</b>
         </Col>
         <Col span={6}>
           <p>{student.education}</p>
         </Col>
-      </Row>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      </DetailRow>
+      <DetailRow>
         <Col span={6}>
           <b>Area:</b>
         </Col>
         <Col span={6}>
           <p>{student.country}</p>
         </Col>
-      </Row>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      </DetailRow>
+      <DetailRow>
         <Col span={6}>
           <b>Gender:</b>
         </Col>
         <Col span={18}>
           <p>{genderList[student.gender]}</p>
         </Col>
-      </Row>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      </DetailRow>
+      <DetailRow>
         <Col span={6}>
           <b>Member Period:</b>
         </Col>
@@ -73,34 +87,32 @@ const DetailCard = () => {
             {student.memberStartAt} - {student.memberEndAt}
           </p>
         </Col>
-      </Row>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      </DetailRow>
+      <DetailRow>
         <Col span={6}>
           <b>Type:</b>
         </Col>
         <Col span={6}>
           <p>{student.type?.name}</p>
         </Col>
-      </Row>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      </DetailRow>
+      <DetailRow>
         <Col span={6}>
           <b>Create Time:</b>
         </Col>
         <Col span={6}>
           <p>{student.createdAt}</p>
         </Col>
-      </Row>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+      </DetailRow>
+      <DetailRow>
         <Col span={6}>
           <b>Update Time:</b>
         </Col>
         <Col span={6}>
           <p>{student.updatedAt}</p>
         </Col>
-      </Row>
-      <h2 style={{ marginBottom: "30px", marginTop: "20px", color: "purple" }}>
-        Interests
-      </h2>
+      </DetailRow>
+      <Title style={{ marginTop: "20px" }}>Interests</Title>
       {student.interest?.map((item) => {
         const selectedColor =
           colorArr[Math.floor(Math.random() * colorArr.length)];
@@ -161,7 +173,7 @@ const DetailCard = () => {
   const [tabKey, setTabKey] = useState("About");
 
   return (
-    <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+    <DetailRow>
       <Col className="gutter-row" span={8}>
         <Card
           title={
@@ -180,10 +192,7 @@ const DetailCard = () => {
             />
           }
         >
-          <Row
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-            style={{ margin: "30px", textAlign: "center" }}
-          >
+          <StudentRow>
             <Col className="gutter-row" span={12}>
               <b>Name</b>
               <br />
@@ -194,8 +203,8 @@ const DetailCard = () => {
               <br />
               {student.age}
             </Col>
-          </Row>
-          <Row style={{ margin: "30px", textAlign: "center" }}>
+          </StudentRow>
+          <StudentRow>
             <Col className="gutter-row" span={12}>
               <b>Email</b>
               <br />
@@ -206,14 +215,14 @@ const DetailCard = () => {
               <br />
               {student.phone}
             </Col>
-          </Row>
-          <Row style={{ margin: "30px", textAlign: "center" }}>
+          </StudentRow>
+          <StudentRow>
             <Col className="gutter-row" span={24}>
               <b>Address</b>
               <br />
               {student.address}
             </Col>
-          </Row>
+          </StudentRow>
         </Card>
       </Col>
 
@@ -229,7 +238,7 @@ const DetailCard = () => {
           {contentList[tabKey]}
         </Card>
       </Col>
-    </Row>
+    </DetailRow>
   );
 };
 

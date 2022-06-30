@@ -5,6 +5,12 @@ import Highcharts from "highcharts/highstock";
 import HighchartsReact from "highcharts-react-official";
 import { useEffect, useState } from "react";
 import { get } from "../apiService";
+import styled from "styled-components";
+
+const ChartCard = styled(Card)`
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
 
 const Polygon = () => {
   const month = {
@@ -95,9 +101,8 @@ const Polygon = () => {
         "Nov",
         "Dec",
       ],
-
     },
-  
+
     legend: {
       layout: "horizontal",
       align: "center",
@@ -147,15 +152,9 @@ const Polygon = () => {
 
   return (
     <div>
-      <Card
-        title="Increment"
-        style={{
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
-      >
+      <ChartCard title="Increment">
         <HighchartsReact highcharts={Highcharts} options={polygonChart} />
-      </Card>
+      </ChartCard>
     </div>
   );
 };

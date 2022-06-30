@@ -5,13 +5,20 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AES } from "crypto-js";
 import { createBrowserHistory } from "history";
 import { post } from "../apiService";
+import styled from "styled-components";
+
+const Title = styled.h2`
+  text-align: center;
+  font-weight: 600px;
+  font-size: 30px;
+`;
 
 export default function Login() {
   const [form] = Form.useForm();
   const onFinish = (values) => {
     post("login", {
       role: values.role,
-      email:values.email,
+      email: values.email,
       password: AES.encrypt(values.password, "cms").toString(),
     })
       .then((response) => {
@@ -41,9 +48,7 @@ export default function Login() {
           style={{ marginTop: 200 }}
           onFinish={onFinish}
         >
-          <h2 style={{ textAlign: "center", fontWeight: 600, fontSize: 30 }}>
-            COURSE MANAGEMENT ASSISTANT
-          </h2>
+          <Title>COURSE MANAGEMENT ASSISTANT</Title>
           <Form.Item name="role" key="role" initialValue="student">
             <Radio.Group>
               <Radio.Button value="student">Student</Radio.Button>

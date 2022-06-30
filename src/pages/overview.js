@@ -11,7 +11,31 @@ import Polygon from "../component/polygon";
 import ColumnChart from "../component/columnChart";
 import HeatMap from "../component/heatMap";
 import Map from "../component/map";
+import styled from "styled-components";
 
+const ChartRow = styled(Row).attrs({
+  gutter: { xs: 8, sm: 16, md: 24, lg: 32 },
+})``;
+
+const TotalFont = styled.b`
+  color: white;
+  font-size: 15px;
+`;
+
+const Div = styled.div`
+  margin-top: 5px;
+  margin-bottom: 5px;
+`;
+
+const DataFont = styled.b`
+  font-size: 30px;
+  color: white;
+`;
+const PercentageFont = styled.p`
+  font-size: 15px;
+  color: white;
+  margin-top: 10px;
+`;
 const Overview = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -22,7 +46,7 @@ const Overview = () => {
   return (
     <>
       <div>
-        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+        <ChartRow>
           <Col span={8}>
             <Card bodyStyle={{ backgroundColor: "#0099ff" }} bordered={false}>
               <Row type="flex" justify="center" align="middle">
@@ -40,14 +64,10 @@ const Overview = () => {
                   }
                 </Col>
                 <Col span={18}>
-                  <b style={{ color: "white", fontSize: "15px" }}>
-                    TOTAL STUDENTS
-                  </b>
-                  <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-                    <b style={{ fontSize: "30px", color: "white" }}>
-                      {data?.student?.total}
-                    </b>
-                  </div>
+                  <TotalFont>TOTAL STUDENTS</TotalFont>
+                  <Div>
+                    <DataFont>{data?.student?.total}</DataFont>
+                  </Div>
                   <Progress
                     percent={
                       100 -
@@ -58,19 +78,13 @@ const Overview = () => {
                     strokeColor="white"
                     trailColor="lightGreen"
                   />
-                  <p
-                    style={{
-                      fontSize: "15px",
-                      color: "white",
-                      marginTop: "10px",
-                    }}
-                  >
+                  <PercentageFont>
                     {(
                       (data?.student?.lastMonthAdded / data?.student?.total) *
                       100
                     ).toFixed(2)}
                     % increase in 30 days
-                  </p>
+                  </PercentageFont>
                 </Col>
               </Row>
             </Card>
@@ -92,14 +106,10 @@ const Overview = () => {
                   }
                 </Col>
                 <Col span={18}>
-                  <b style={{ color: "white", fontSize: "15px" }}>
-                    TOTAL TEACHERS
-                  </b>
-                  <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-                    <b style={{ fontSize: "30px", color: "white" }}>
-                      {data?.teacher?.total}
-                    </b>
-                  </div>
+                  <TotalFont>TOTAL TEACHERS</TotalFont>
+                  <Div>
+                    <DataFont style={{}}>{data?.teacher?.total}</DataFont>
+                  </Div>
                   <Progress
                     percent={
                       100 -
@@ -110,19 +120,13 @@ const Overview = () => {
                     strokeColor="white"
                     trailColor="lightGreen"
                   />
-                  <p
-                    style={{
-                      fontSize: "15px",
-                      color: "white",
-                      marginTop: "10px",
-                    }}
-                  >
+                  <PercentageFont>
                     {(
                       (data?.teacher?.lastMonthAdded / data?.teacher?.total) *
                       100
                     ).toFixed(2)}
                     % increase in 30 days
-                  </p>
+                  </PercentageFont>
                 </Col>
               </Row>
             </Card>
@@ -144,14 +148,10 @@ const Overview = () => {
                   }
                 </Col>
                 <Col span={18}>
-                  <b style={{ color: "white", fontSize: "15px" }}>
-                    TOTAL COURSES
-                  </b>
-                  <div style={{ marginTop: "5px", marginBottom: "5px" }}>
-                    <b style={{ fontSize: "30px", color: "white" }}>
-                      {data?.course?.total}
-                    </b>
-                  </div>
+                  <TotalFont>TOTAL COURSES</TotalFont>
+                  <Div>
+                    <DataFont style={{}}>{data?.course?.total}</DataFont>
+                  </Div>
                   <Progress
                     percent={
                       100 -
@@ -161,41 +161,36 @@ const Overview = () => {
                     strokeColor="white"
                     trailColor="lightGreen"
                   />
-                  <p
-                    style={{
-                      fontSize: "15px",
-                      color: "white",
-                      marginTop: "10px",
-                    }}
-                  >
+                  <PercentageFont>
                     {(
                       (data?.course?.lastMonthAdded / data?.course?.total) *
                       100
                     ).toFixed(2)}
                     % increase in 30 days
-                  </p>
+                  </PercentageFont>
                 </Col>
               </Row>
             </Card>
           </Col>
-        </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col span={12}><Map /></Col>
+        </ChartRow>
+        <ChartRow>
+          <Col span={12}>
+            <Map />
+          </Col>
           <Col span={12}>
             <PieCharts />
           </Col>
-        </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col span={12} >
+        </ChartRow>
+        <ChartRow>
+          <Col span={12}>
             <Polygon />
           </Col>
-          <Col span={12} >
+          <Col span={12}>
             <ColumnChart />
           </Col>
-        </Row>
-        
-          <HeatMap />
-       
+        </ChartRow>
+
+        <HeatMap />
       </div>
     </>
   );

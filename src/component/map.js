@@ -6,6 +6,12 @@ import { useEffect, useState } from "react";
 import { get } from "../apiService";
 import axios from "axios";
 import highchartsMap from "highcharts/modules/map";
+import styled from "styled-components";
+
+const ChartCard = styled(Card)`
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
 
 highchartsMap(Highcharts);
 const Map = () => {
@@ -107,14 +113,11 @@ const Map = () => {
       },
     ],
   };
+
   return (
     <div>
-      <Card
+      <ChartCard
         title="Distribution"
-        style={{
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
         extra={
           <Select
             defaultValue="student"
@@ -131,7 +134,7 @@ const Map = () => {
           constructorType={"mapChart"}
           options={chart}
         />
-      </Card>
+      </ChartCard>
     </div>
   );
 };

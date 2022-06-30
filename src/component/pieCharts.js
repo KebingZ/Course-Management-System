@@ -3,6 +3,12 @@ import Highcharts from "highcharts/highstock";
 import HighchartsReact from "highcharts-react-official";
 import { useEffect, useState } from "react";
 import { get } from "../apiService";
+import styled from "styled-components";
+
+const ChartCard = styled(Card)`
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
 
 const PieCharts = () => {
   const [data, setData] = useState();
@@ -80,8 +86,10 @@ const PieCharts = () => {
   });
 
   const genderData = (data) => {
-    const total = data ? (Object.values(data.gender).reduce((a, b) => a + b)) : null;
-    
+    const total = data
+      ? Object.values(data.gender).reduce((a, b) => a + b)
+      : null;
+
     return [
       {
         name: "male",
@@ -104,7 +112,7 @@ const PieCharts = () => {
 
   return (
     <div>
-      <Card
+      <ChartCard
         title="Type"
         extra={
           <Select
@@ -112,29 +120,27 @@ const PieCharts = () => {
             bordered={false}
             onChange={(value) => setSelValue(value)}
           >
-            <Select.Option key="student" value="student">student type</Select.Option>
-            <Select.Option key="course" value="course">course type</Select.Option>
-            <Select.Option key="gender" value="gender">gender</Select.Option>
+            <Select.Option key="student" value="student">
+              student type
+            </Select.Option>
+            <Select.Option key="course" value="course">
+              course type
+            </Select.Option>
+            <Select.Option key="gender" value="gender">
+              gender
+            </Select.Option>
           </Select>
         }
-        style={{
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
       >
         {selValue === "gender" ? (
           <Row>
-            
             {twoPieChart.map((item) => {
               return (
                 <Col span={12} key={twoPieChart.indexOf(item)}>
-
                   <HighchartsReact highcharts={Highcharts} options={item} />
-
                 </Col>
               );
             })}
-            
           </Row>
         ) : (
           <HighchartsReact
@@ -142,7 +148,7 @@ const PieCharts = () => {
             options={pieChart(dualTypeData)}
           />
         )}
-      </Card>
+      </ChartCard>
     </div>
   );
 };

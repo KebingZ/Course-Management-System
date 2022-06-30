@@ -165,6 +165,7 @@ const HeatMap = () => {
       ],
     },
   };
+
   return (
     <div>
       <Card title="Course Schedule">

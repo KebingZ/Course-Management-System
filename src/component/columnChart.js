@@ -4,6 +4,12 @@ import Highcharts from "highcharts/highstock";
 import HighchartsReact from "highcharts-react-official";
 import { useEffect, useState } from "react";
 import { get } from "../apiService";
+import styled from "styled-components";
+
+const ChartCard = styled(Card)`
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
 
 const ColumnChart = () => {
   const [student, setStudent] = useState();
@@ -112,17 +118,12 @@ const ColumnChart = () => {
       },
     ],
   };
+
   return (
     <div>
-      <Card
-        title="Languages"
-        style={{
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
-      >
+      <ChartCard title="Languages">
         <HighchartsReact highcharts={Highcharts} options={chart} />
-      </Card>
+      </ChartCard>
     </div>
   );
 };

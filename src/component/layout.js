@@ -18,8 +18,44 @@ import { createBrowserHistory } from "history";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { post } from "../apiService";
 import { BreadcrumbForManager } from "../breadcrumb";
+import styled from "styled-components";
 
 const { Header, Sider, Content } = Layout;
+
+const LayoutSider = styled(Sider)`
+  top: 0;
+  left: 0;
+  padding: 0;
+  overflow-y: auto;
+  position: sticky;
+  height: 100vh;
+`;
+
+const LayoutHeader = styled(Header)`
+  padding: 0;
+  position: sticky;
+  top: 0;
+  background-color: #001529;
+  z-index: 1;
+`
+const LayoutContent = styled(Content)`
+  margin: 24px 16px;
+  padding: 24px;
+  min-height: 280px;
+  height: 100%;
+`
+
+const Logo = styled.h3`
+  margin-top: 5px;
+  margin-bottom: 15px;
+  color: white;
+  height: 40px;
+  text-align: center;
+  font-size: 35px;
+  font-family: monospace;
+  text-shadow: 5px 1px 5px;
+  transform: rotateX(45deg);
+`;
 
 const handleLogout = () => {
   post("logout", {})
@@ -45,35 +81,9 @@ const LayoutPage = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        style={{
-          top: 0,
-          left: 0,
-          padding: 0,
-          overflowY: "auto",
-          position: "sticky",
-          height: "100vh",
-        }}
-      >
+      <LayoutSider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo" />
-        <h3
-          style={{
-            marginTop: "5px",
-            marginBottom: "15px",
-            color: "white",
-            height: "40px",
-            textAlign: "center",
-            fontSize: 35,
-            fontFamily: "monospace",
-            textShadow: "5px 1px 5px",
-            transform: "rotateX(45deg)",
-          }}
-        >
-          cms
-        </h3>
+        <Logo>cms</Logo>
         <Menu
           theme="dark"
           mode="inline"
@@ -95,7 +105,11 @@ const LayoutPage = () => {
               Student List
             </Menu.Item>
           </SubMenu>
-          <SubMenu key="teacher" icon={<DeploymentUnitOutlined />} title="Teacher">
+          <SubMenu
+            key="teacher"
+            icon={<DeploymentUnitOutlined />}
+            title="Teacher"
+          >
             <Menu.Item
               key="teachers"
               icon={<TeamOutlined />}
@@ -113,17 +127,10 @@ const LayoutPage = () => {
             Message
           </Menu.Item>
         </Menu>
-      </Sider>
+      </LayoutSider>
       <Layout className="site-layout">
-        <Header
+        <LayoutHeader
           className="site-layout-background"
-          style={{
-            padding: 0,
-            position: "sticky",
-            top: 0,
-            backgroundColor: "#001529",
-            zIndex: 1,
-          }}
         >
           <MenuFolder
             className="trigger"
@@ -156,19 +163,13 @@ const LayoutPage = () => {
               marginTop: "20px",
             }}
           />
-        </Header>
+        </LayoutHeader>
         <BreadcrumbForManager />
-        <Content
+        <LayoutContent
           className="site-layout-background"
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-            height: "100%",
-          }}
         >
           <Outlet />
-        </Content>
+        </LayoutContent>
       </Layout>
     </Layout>
   );
