@@ -173,72 +173,74 @@ const DetailCard = () => {
   const [tabKey, setTabKey] = useState("About");
 
   return (
-    <DetailRow>
-      <Col className="gutter-row" span={8}>
-        <Card
-          title={
-            <Meta
-              avatar={
-                <Avatar
-                  src={student.avatar}
-                  style={{ width: "150px", height: "150px" }}
-                />
-              }
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                height: "160px",
-              }}
-            />
-          }
-        >
-          <StudentRow>
-            <Col className="gutter-row" span={12}>
-              <b>Name</b>
-              <br />
-              {student.name}
-            </Col>
-            <Col className="gutter-row" span={12}>
-              <b>Age</b>
-              <br />
-              {student.age}
-            </Col>
-          </StudentRow>
-          <StudentRow>
-            <Col className="gutter-row" span={12}>
-              <b>Email</b>
-              <br />
-              {student.email}
-            </Col>
-            <Col className="gutter-row" span={12}>
-              <b>Phone</b>
-              <br />
-              {student.phone}
-            </Col>
-          </StudentRow>
-          <StudentRow>
-            <Col className="gutter-row" span={24}>
-              <b>Address</b>
-              <br />
-              {student.address}
-            </Col>
-          </StudentRow>
-        </Card>
-      </Col>
+    <div>
+      <DetailRow>
+        <Col className="gutter-row" span={8}>
+          <Card
+            title={
+              <Meta
+                avatar={
+                  <Avatar
+                    src={student.avatar}
+                    style={{ width: "150px", height: "150px" }}
+                  />
+                }
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  height: "160px",
+                }}
+              />
+            }
+          >
+            <StudentRow>
+              <Col className="gutter-row" span={12}>
+                <b>Name</b>
+                <br />
+                {student.name}
+              </Col>
+              <Col className="gutter-row" span={12}>
+                <b>Age</b>
+                <br />
+                {student.age}
+              </Col>
+            </StudentRow>
+            <StudentRow>
+              <Col className="gutter-row" span={12}>
+                <b>Email</b>
+                <br />
+                {student.email}
+              </Col>
+              <Col className="gutter-row" span={12}>
+                <b>Phone</b>
+                <br />
+                {student.phone}
+              </Col>
+            </StudentRow>
+            <StudentRow>
+              <Col className="gutter-row" span={24}>
+                <b>Address</b>
+                <br />
+                {student.address}
+              </Col>
+            </StudentRow>
+          </Card>
+        </Col>
 
-      <Col className="gutter-row" span={16}>
-        <Card
-          style={{ width: "100%" }}
-          tabList={tabList}
-          activeTabKey={tabKey}
-          onTabChange={(key) => {
-            setTabKey(key);
-          }}
-        >
-          {contentList[tabKey]}
-        </Card>
-      </Col>
-    </DetailRow>
+        <Col className="gutter-row" span={16}>
+          <Card
+            style={{ width: "100%" }}
+            tabList={tabList}
+            activeTabKey={tabKey}
+            onTabChange={(key) => {
+              setTabKey(key);
+            }}
+          >
+            {contentList[tabKey]}
+          </Card>
+        </Col>
+      </DetailRow>
+    </div>
   );
 };
 

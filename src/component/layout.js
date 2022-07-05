@@ -2,23 +2,18 @@
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  DeploymentUnitOutlined,
-  DashboardOutlined,
-  SolutionOutlined,
-  ReadOutlined,
-  MessageOutlined,
-  TeamOutlined,
   BellOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Popover } from "antd";
 import React, { useState } from "react";
-import SubMenu from "antd/lib/menu/SubMenu";
 import { createBrowserHistory } from "history";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { post } from "../apiService";
 import { BreadcrumbForManager } from "../breadcrumb";
 import styled from "styled-components";
+import RoutesTree from "../Routes";
+import SidebarGenerator from "./sidebar";
 
 const { Header, Sider, Content } = Layout;
 
@@ -37,13 +32,13 @@ const LayoutHeader = styled(Header)`
   top: 0;
   background-color: #001529;
   z-index: 1;
-`
+`;
 const LayoutContent = styled(Content)`
   margin: 24px 16px;
   padding: 24px;
   min-height: 280px;
   height: 100%;
-`
+`;
 
 const Logo = styled.h3`
   margin-top: 5px;
@@ -73,11 +68,18 @@ const handleLogout = () => {
 };
 
 const LayoutPage = () => {
-  let navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const MenuFolder = collapsed ? MenuUnfoldOutlined : MenuFoldOutlined;
   let pathname = window.location.pathname;
-  const path = pathname.toString().split("manager/")[1]?.split("/")[0];
+  const path =
+    pathname.toString().includes("courses") &&
+    pathname.toString().split("courses/")[1] !== ""
+      ? pathname.toString().split("courses/")[1]
+      : pathname.toString().split("manager/")[1]?.split("/")[0];
+  const openKeys = pathname.toString().includes("courses")
+    ? "Course"
+    : path?.substring(0, path.length - 1)[0].toUpperCase() +
+      path?.substring(0, path.length - 1).substring(1);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -87,51 +89,17 @@ const LayoutPage = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["overview"]}
-          selectedKeys={path ? [path] : "overview"}
-          defaultOpenKeys={path ? [path] : null}
+          defaultSelectedKeys={[""]}
+          selectedKeys={path ? [path] : ""}
+          defaultOpenKeys={openKeys ? [openKeys] : null}
         >
-          <Menu.Item key="overview" icon={<DashboardOutlined />}>
-            <Link to="">Overview</Link>
-          </Menu.Item>
-          <SubMenu key="student" icon={<SolutionOutlined />} title="Student">
-            <Menu.Item
-              key="students"
-              icon={<TeamOutlined />}
-              onClick={() => {
-                navigate("students");
-              }}
-            >
-              Student List
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="teacher"
-            icon={<DeploymentUnitOutlined />}
-            title="Teacher"
-          >
-            <Menu.Item
-              key="teachers"
-              icon={<TeamOutlined />}
-              onClick={() => {
-                navigate("teachers");
-              }}
-            >
-              Teacher List
-            </Menu.Item>
-          </SubMenu>
-          <Menu.Item key="course" icon={<ReadOutlined />}>
-            Course
-          </Menu.Item>
-          <Menu.Item key="message" icon={<MessageOutlined />}>
-            Message
-          </Menu.Item>
+          {RoutesTree()[1].children[0].children.map((item) =>
+            SidebarGenerator(item)
+          )}
         </Menu>
       </LayoutSider>
       <Layout className="site-layout">
-        <LayoutHeader
-          className="site-layout-background"
-        >
+        <LayoutHeader className="site-layout-background">
           <MenuFolder
             className="trigger"
             key="trigger"
@@ -148,9 +116,11 @@ const LayoutPage = () => {
                 backgroundColor: "grey",
                 color: "white",
                 fontSize: "20px",
+                padding: "5px",
                 float: "right",
                 marginRight: "100px",
-                marginTop: "20px",
+                borderRadius: "50%",
+                marginTop: "15px",
               }}
             />
           </Popover>
@@ -165,9 +135,7 @@ const LayoutPage = () => {
           />
         </LayoutHeader>
         <BreadcrumbForManager />
-        <LayoutContent
-          className="site-layout-background"
-        >
+        <LayoutContent className="site-layout-background">
           <Outlet />
         </LayoutContent>
       </Layout>

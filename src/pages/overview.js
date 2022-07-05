@@ -6,11 +6,11 @@ import {
   DeploymentUnitOutlined,
   ReadOutlined,
 } from "@ant-design/icons";
-import PieCharts from "../component/pieCharts";
-import Polygon from "../component/polygon";
-import ColumnChart from "../component/columnChart";
-import HeatMap from "../component/heatMap";
-import Map from "../component/map";
+import PieCharts from "../component/charts/pieCharts";
+import Polygon from "../component/charts/polygon";
+import ColumnChart from "../component/charts/columnChart";
+import HeatMap from "../component/charts/heatMap";
+import Map from "../component/charts/map";
 import styled from "styled-components";
 
 const ChartRow = styled(Row).attrs({
