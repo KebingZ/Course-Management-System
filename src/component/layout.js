@@ -12,7 +12,7 @@ import { Outlet } from "react-router-dom";
 import { post } from "../apiService";
 import { BreadcrumbForManager } from "../breadcrumb";
 import styled from "styled-components";
-import RoutesTree from "../Routes";
+import { manager } from "../Routes";
 import SidebarGenerator from "./sidebar";
 
 const { Header, Sider, Content } = Layout;
@@ -93,9 +93,7 @@ const LayoutPage = () => {
           selectedKeys={path ? [path] : ""}
           defaultOpenKeys={openKeys ? [openKeys] : null}
         >
-          {RoutesTree()[1].children[0].children.map((item) =>
-            SidebarGenerator(item)
-          )}
+          {manager.children.map((item) => SidebarGenerator(item))}
         </Menu>
       </LayoutSider>
       <Layout className="site-layout">

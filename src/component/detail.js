@@ -17,6 +17,19 @@ const StudentRow = styled(DetailRow)`
   margin: 30px;
   text-align: center;
 `;
+
+const colorArr = [
+  "magenta",
+  "red",
+  "volcano",
+  "orange",
+  "gold",
+  "lime",
+  "cyan",
+  "blue",
+  "geekblue",
+];
+
 const DetailCard = () => {
   const [student, setStudent] = useState({});
   let pathname = window.location.pathname;
@@ -38,17 +51,6 @@ const DetailCard = () => {
     },
   ];
   const genderList = { 1: "Male", 2: "Female" };
-  const colorArr = [
-    "magenta",
-    "red",
-    "volcano",
-    "orange",
-    "gold",
-    "lime",
-    "cyan",
-    "blue",
-    "geekblue",
-  ];
 
   const ofAbout = (
     <div>
