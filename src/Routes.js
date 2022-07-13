@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import Login from "./pages/login";
 import LayoutPage from "./component/layout";
-import StudentList from "./component/studentList";
+import StudentList from "./component/lists/studentList";
 import DetailCard from "./component/detail";
 import Overview from "./pages/overview";
 import Students from "./pages/students";
@@ -66,7 +66,7 @@ export const manager = {
       ],
     },
     {
-      path: "message",
+      path: "messages",
       key: "Message",
     },
   ],

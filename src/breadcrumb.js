@@ -3,74 +3,48 @@ import { Breadcrumb } from "antd";
 import { user } from "./App";
 import { Link } from "react-router-dom";
 import { manager } from "./Routes";
-
-const search = (path, data, breadcrumbPath, breadcrumb) => {
-  if (path === null) {
-    return [["Overview"], [""]];
-  }
-  if (!isNaN(parseInt(path)) && !data.key) {
-    breadcrumb.push(path);
-    breadcrumbPath.push(path);
-
-    return [breadcrumb, breadcrumbPath];
-  }
-  if (data.path === path) {
-    breadcrumb.push(data.key);
-    breadcrumbPath.push(data.path);
-    return [breadcrumb, breadcrumbPath];
-  }
-  if (data?.children) {
-    breadcrumb.push(data.key);
-    breadcrumbPath.push(data.path);
-    return search(path, data.children, breadcrumb, breadcrumbPath);
-  }
-
-  if (data.length > 2) {
-    for (var i = 0; i < data.length; i++) {
-      if (search(path, data[i], breadcrumb, breadcrumbPath))
-        return search(path, data[i], breadcrumb, breadcrumbPath);
-    }
-  }
-};
-
-const deepSearchRoutes = (path, data) => {
-  let breadData;
-  for (var i = 0; i < data.length; i++) {
-    let breadcrumb = [];
-    let breadcrumbPath = [];
-    const result = search(path, data[i], breadcrumb, breadcrumbPath);
-    if (result?.length === 2) {
-      breadData = result;
-      return breadData;
-    }
-  }
-};
+import { getActiveKey, searchKeys } from "./component/sidebar";
 
 export const BreadcrumbForManager = () => {
   let pathname = window.location.pathname;
-  const currentPath = pathname.toString().split(`${user.role}/`)[1];
-  const path = currentPath
-    ? currentPath.includes("/") && currentPath[currentPath.length - 1] !== "/"
-      ? currentPath.substring(currentPath.lastIndexOf("/") + 1)
-      : currentPath?.substring(0, currentPath.length - 1)
+  const path = pathname.split(`${user.role}/`)[1]
+    ? pathname.split(`${user.role}/`)[1]
     : null;
 
-  const data = deepSearchRoutes(path, manager.children);
-  let bread = [];
-  let pathTracker = "";
+  const noLinkNodes = getActiveKey(path, manager.children)[1];
 
-  if (data && data[0]) {
-    for (var i = 0; i < data[0]?.length; i++) {
-      data[0] = Array.from(new Set(data[0]));
-      data[1] = Array.from(new Set(data[1]));
-      pathTracker += i === data[0].length - 1 ? data[1][i] : data[1][i] + "/";
-      bread.push(
-        <Breadcrumb.Item key={data[0][i]}>
-          <Link to={pathTracker}>{data[0][i]}</Link>
-        </Breadcrumb.Item>
-      );
+  const breadcrumbGenerator = (data) => {
+    if (path === null) {
+      data.push(<Breadcrumb.Item key="Overview">Overview</Breadcrumb.Item>);
+      return data;
     }
-  }
+    let keys = path.split("/");
+    if (!isNaN(parseInt(keys[keys.length - 1]))) {
+      keys = keys.slice(0, keys.length - 1);
+      keys.push("");
+    }
+    const nodes = searchKeys(keys, manager.children, []);
+    for (let i = 0; i < nodes.length; i++) {
+      if (
+        noLinkNodes?.includes(nodes[i]) ||
+        (i === nodes.length - 1 &&
+          isNaN(parseInt(path.split("/")[path.split("/").length - 1])))
+      ) {
+        data.push(<Breadcrumb.Item key={nodes[i]}>{nodes[i]}</Breadcrumb.Item>);
+      } else {
+        data.push(
+          <Breadcrumb.Item key={nodes[i]}>
+            <Link to={keys.slice(0, i + 1).join("/")}>{nodes[i]}</Link>
+          </Breadcrumb.Item>
+        );
+      }
+    }
+    if (!isNaN(parseInt(path.split("/")[path.split("/").length - 1]))) {
+      data.push(<Breadcrumb.Item key="detail">detail</Breadcrumb.Item>);
+    }
+    return data;
+  };
+
   return (
     <Breadcrumb
       style={{ padding: "5px", marginLeft: "10px", marginTop: "10px" }}
@@ -80,11 +54,7 @@ export const BreadcrumbForManager = () => {
           CMS {user.role.toUpperCase()} SYSTEM
         </a>
       </Breadcrumb.Item>
-      {bread !== [] ? (
-        bread.map((item) => item)
-      ) : (
-        <Breadcrumb.Item key="Overview">Overview</Breadcrumb.Item>
-      )}
+      {breadcrumbGenerator([]).map((item) => item)}
     </Breadcrumb>
   );
 };

@@ -8,7 +8,7 @@ export const user =
     : null;
 
 function App() {
-  let element = useRoutes(RoutesTree(user, user.role));
+  let element = useRoutes(RoutesTree(user, user?.role));
   return element;
 }
 

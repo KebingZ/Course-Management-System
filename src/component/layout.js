@@ -13,7 +13,8 @@ import { post } from "../apiService";
 import { BreadcrumbForManager } from "../breadcrumb";
 import styled from "styled-components";
 import { manager } from "../Routes";
-import SidebarGenerator from "./sidebar";
+import SidebarGenerator, { getActiveKey } from "./sidebar";
+import { user } from "../App";
 
 const { Header, Sider, Content } = Layout;
 
@@ -71,16 +72,11 @@ const LayoutPage = () => {
   const [collapsed, setCollapsed] = useState(false);
   const MenuFolder = collapsed ? MenuUnfoldOutlined : MenuFoldOutlined;
   let pathname = window.location.pathname;
-  const path =
-    pathname.toString().includes("courses") &&
-    pathname.toString().split("courses/")[1] !== ""
-      ? pathname.toString().split("courses/")[1]
-      : pathname.toString().split("manager/")[1]?.split("/")[0];
-  const openKeys = pathname.toString().includes("courses")
-    ? "Course"
-    : path?.substring(0, path.length - 1)[0].toUpperCase() +
-      path?.substring(0, path.length - 1).substring(1);
-
+  const path = pathname.split(`${user.role}/`)[1]
+    ? pathname.split(`${user.role}/`)[1]
+    : null;
+  const selectedKeys = getActiveKey(path, manager.children)[0];
+  const openKeys = getActiveKey(path, manager.children)[1];
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <LayoutSider trigger={null} collapsible collapsed={collapsed}>
@@ -90,8 +86,8 @@ const LayoutPage = () => {
           theme="dark"
           mode="inline"
           defaultSelectedKeys={[""]}
-          selectedKeys={path ? [path] : ""}
-          defaultOpenKeys={openKeys ? [openKeys] : null}
+          selectedKeys={selectedKeys}
+          defaultOpenKeys={openKeys ? openKeys : null}
         >
           {manager.children.map((item) => SidebarGenerator(item))}
         </Menu>
