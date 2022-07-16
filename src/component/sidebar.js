@@ -31,8 +31,8 @@ export const searchKeys = (path, data, keys) => {
   for (let i = 0; i < data.length; i++) {
     if (data[i].path === path[0]) {
       keys.push(data[i].key);
-      path = path.slice(1)
-      if (data[i]?.children && path.length!==0) {
+      path = path.slice(1);
+      if (data[i]?.children && path.length !== 0) {
         return searchKeys(path, data[i].children, keys);
       }
       return keys;
@@ -46,18 +46,19 @@ export const getActiveKey = (path, routes) => {
   }
   if (path.includes("/")) {
     const keys = path.split("/");
-    const openKeys = searchKeys(keys.slice(0, keys.length - 1), routes, [])
+    const length = keys.length
+    const openKeys = searchKeys(keys.slice(0, length - 1), routes, []);
     if (
-      keys[keys.length - 1] !== "" &&
-      isNaN(parseInt(keys[keys.length - 1])) === true
+      keys[length - 1] !== "" &&
+      isNaN(parseInt(keys[length - 1]))
     ) {
-      const selectedKeys = keys[keys.length - 1];
+      const selectedKeys = keys[length - 1];
       return [[selectedKeys], openKeys];
     }
-    const selectedKeys = keys[keys.length - 2];
+    const selectedKeys = keys[length - 2];
     return [[selectedKeys], openKeys];
   }
-  return [[path], null]
+  return [[path], null];
 };
 
 const SidebarGenerator = (element, parent = null) => {

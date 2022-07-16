@@ -24,21 +24,23 @@ export const BreadcrumbForManager = () => {
       keys.push("");
     }
     const nodes = searchKeys(keys, manager.children, []);
-    for (let i = 0; i < nodes.length; i++) {
+    data = nodes.map((item) => {
       if (
-        noLinkNodes?.includes(nodes[i]) ||
-        (i === nodes.length - 1 &&
+        noLinkNodes?.includes(item) ||
+        (item === nodes[nodes.length - 1] &&
           isNaN(parseInt(path.split("/")[path.split("/").length - 1])))
       ) {
-        data.push(<Breadcrumb.Item key={nodes[i]}>{nodes[i]}</Breadcrumb.Item>);
+        return <Breadcrumb.Item key={item}>{item}</Breadcrumb.Item>;
       } else {
-        data.push(
-          <Breadcrumb.Item key={nodes[i]}>
-            <Link to={keys.slice(0, i + 1).join("/")}>{nodes[i]}</Link>
+        return (
+          <Breadcrumb.Item key={item}>
+            <Link to={keys.slice(0, nodes.indexOf(item) + 1).join("/")}>
+              {item}
+            </Link>
           </Breadcrumb.Item>
         );
       }
-    }
+    });
     if (!isNaN(parseInt(path.split("/")[path.split("/").length - 1]))) {
       data.push(<Breadcrumb.Item key="detail">detail</Breadcrumb.Item>);
     }

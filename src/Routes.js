@@ -2,9 +2,11 @@ import { Navigate, Outlet } from "react-router-dom";
 import Login from "./pages/login";
 import LayoutPage from "./component/layout";
 import StudentList from "./component/lists/studentList";
-import DetailCard from "./component/detail";
 import Overview from "./pages/overview";
 import Students from "./pages/students";
+import CourseList from "./pages/courses";
+import StudentDetailCard from "./component/studentDetail";
+import CourseDetailCard from "./component/courseDetail"
 
 export const manager = {
   path: "dashboard/manager",
@@ -27,7 +29,7 @@ export const manager = {
         },
         {
           path: ":id",
-          element: <DetailCard />,
+          element: <StudentDetailCard />,
         },
       ],
     },
@@ -51,9 +53,11 @@ export const manager = {
         {
           path: "",
           key: "All Courses",
+          element: <CourseList />
         },
         {
           path: ":id",
+          element: <CourseDetailCard />
         },
         {
           path: "add-course",
