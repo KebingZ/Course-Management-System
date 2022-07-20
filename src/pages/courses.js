@@ -1,31 +1,27 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Col, Row, Skeleton, Divider, BackTop } from "antd";
 import { get } from "../apiService";
 import CourseCard from "../component/courseCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-let page = 1;
 const CourseList = () => {
   const [data, setData] = useState([]);
   const [courseData, setCourseData] = useState([]);
-  const getData = (i) => {
-    get(`courses?page=1&limit=${20 * i}`).then((response) => {
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    get(`courses?page=1&limit=${20 * page}`).then((response) => {
       setData(response.data);
       setCourseData(response.data.courses);
     });
-  };
-  useEffect(() => {
-    getData(page);
-  }, []);
+  }, [page]);
   return (
     <div>
-      <BackTop style={{ right: 0 }} />
+      <BackTop style={{ right: 0, border: "none" }} />
       <InfiniteScroll
         dataLength={courseData?.length}
         next={() => {
-          page += 1;
-          return getData(page);
+          setPage(page + 1);
         }}
         hasMore={courseData?.length < data?.total}
         loader={
@@ -43,7 +39,7 @@ const CourseList = () => {
         <Row>
           {courseData?.map((item) => (
             <Col span={6} key={item.id}>
-              {CourseCard(item)}
+              <CourseCard data={item} />
             </Col>
           ))}
         </Row>

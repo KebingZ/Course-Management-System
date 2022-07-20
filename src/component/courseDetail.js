@@ -1,7 +1,15 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Tag, Table, Divider, Collapse } from "antd";
+import {
+  Card,
+  Row,
+  Col,
+  Tag,
+  Table,
+  Divider,
+  Collapse,
+  Badge,
+  Steps,
+} from "antd";
 import { get } from "../apiService";
 import styled from "styled-components";
 import { timeUnit } from "./courseCard";
@@ -9,6 +17,7 @@ import { UserOutlined, HeartFilled } from "@ant-design/icons";
 import { colorArr } from "./studentDetail";
 
 const { Panel } = Collapse;
+const { Step } = Steps;
 
 const DetailRow = styled(Row).attrs({
   gutter: { xs: 8, sm: 16, md: 24, lg: 32 },
@@ -22,6 +31,11 @@ const Title = styled.h2`
 const Theme = styled.h3`
   margin-top: 30px;
   margin-bottom: 30px;
+`;
+
+const Number = styled.b`
+  color: rgb(115, 86, 241);
+  font-size: 24px;
 `;
 
 const days = [
@@ -67,8 +81,24 @@ const CourseDetailCard = () => {
       <p>{course?.createdAt}</p>
       <Theme>Start Time: </Theme>
       <p>{course?.startTime}</p>
-      <Theme>Status: </Theme>
-      <p></p>
+
+      <Theme>
+        <Badge dot={true} color="#52c41a">
+          Status
+        </Badge>
+      </Theme>
+      <Steps>
+        {course?.schedule?.chapters?.map((item) => {
+          if (item.order < checkProcess()) {
+            return <Step title={item.name} status="finish" />;
+          } else if (item.order === checkProcess()) {
+            return <Step title={item.name} status="process" />;
+          } else {
+            return <Step title={item.name} status="wait" />;
+          }
+        })}
+      </Steps>
+
       <Theme>Course Code: </Theme>
       <p>{course?.uid}</p>
       <Theme>Class Time: </Theme>
@@ -97,6 +127,7 @@ const CourseDetailCard = () => {
             return (
               <Panel
                 header={item.name}
+                key={item.id}
                 extra={
                   <Tag key={item.id} color={processTag[0].color}>
                     {processTag[0].text}
@@ -110,6 +141,7 @@ const CourseDetailCard = () => {
             return (
               <Panel
                 header={item.name}
+                key={item.id}
                 extra={
                   <Tag key={item.id} color={processTag[1].color}>
                     {processTag[1].text}
@@ -123,6 +155,7 @@ const CourseDetailCard = () => {
             return (
               <Panel
                 header={item.name}
+                key={item.id}
                 extra={
                   <Tag key={item.id} color={processTag[2].color}>
                     {processTag[2].text}
@@ -154,7 +187,7 @@ const CourseDetailCard = () => {
           }}
           cover={
             <img
-              alt="Course Image"
+              alt="Course"
               src={course?.cover}
               style={{ width: "100%", height: "200px" }}
             />
@@ -183,7 +216,9 @@ const CourseDetailCard = () => {
             <Col span={12}>Teacher:</Col>
             <Col span={12} style={{ textAlign: "right" }}>
               <b>
-                <a href="">{course?.teacherName}</a>
+                <a href={`/dashboard/manager/teachers/${course?.teacherId}`}>
+                  {course?.teacherName}
+                </a>
               </b>
             </Col>
             <Divider />
@@ -196,6 +231,64 @@ const CourseDetailCard = () => {
             </Col>
           </Row>
         </Card>
+        <Row
+          style={{
+            marginLeft: "10px",
+            marginRight: "-10px",
+            marginTop: "-10px",
+            borderLeft: "1px solid rgb(240, 240, 240)",
+            borderRight: "1px solid rgb(240, 240, 240)",
+            borderBottom: "1px solid rgb(240, 240, 240)",
+          }}
+        >
+          <Col
+            span={6}
+            style={{
+              textAlign: "center",
+              borderRight: "1px solid rgb(240, 240, 240)",
+            }}
+          >
+            <div style={{ marginTop: "10px" }}>
+              <Number>{course?.sales?.price}</Number>
+              <p>Price</p>
+            </div>
+          </Col>
+          <Col
+            span={6}
+            style={{
+              textAlign: "center",
+              borderRight: "1px solid rgb(240, 240, 240)",
+            }}
+          >
+            <div style={{ marginTop: "10px" }}>
+              <Number>{course?.sales?.batches}</Number>
+              <p>Batches</p>
+            </div>
+          </Col>
+          <Col
+            span={6}
+            style={{
+              textAlign: "center",
+              borderRight: "1px solid rgb(240, 240, 240)",
+            }}
+          >
+            <div style={{ marginTop: "10px" }}>
+              <Number>{course?.sales?.studentAmount}</Number>
+              <p>Students</p>
+            </div>
+          </Col>
+          <Col
+            span={6}
+            style={{
+              textAlign: "center",
+            }}
+          >
+            <div style={{ marginTop: "10px" }}>
+              <Number>{course?.sales?.earnings}</Number>
+              <p>Earnings</p>
+            </div>
+          </Col>
+        </Row>
       </Col>
 
       <Col className="gutter-row" span={16}>

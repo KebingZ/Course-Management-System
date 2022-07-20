@@ -5,7 +5,7 @@ import {
   BellOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Popover } from "antd";
+import { Dropdown, Layout, Menu, Popover } from "antd";
 import React, { useState } from "react";
 import { createBrowserHistory } from "history";
 import { Outlet } from "react-router-dom";
@@ -15,6 +15,7 @@ import styled from "styled-components";
 import { manager } from "../Routes";
 import SidebarGenerator, { getActiveKey } from "./sidebar";
 import { user } from "../App";
+import MessageDropdown from "./messageDropdown";
 
 const { Header, Sider, Content } = Layout;
 
@@ -118,15 +119,30 @@ const LayoutPage = () => {
               }}
             />
           </Popover>
-          <BellOutlined
-            style={{
-              color: "white",
-              fontSize: "20px",
-              float: "right",
-              marginRight: "50px",
-              marginTop: "20px",
+
+          <Dropdown
+            overlay={<MessageDropdown />}
+            overlayStyle={{
+              width: "20%",
+              height: "auto",
+              position: "fixed",
+              backgroundColor: "white",
+              color: "!important",
+              borderRadius: "5px",
+              margin: "10px",
             }}
-          />
+            trigger={["click"]}
+          >
+            <BellOutlined
+              style={{
+                color: "white",
+                fontSize: "20px",
+                float: "right",
+                marginRight: "50px",
+                marginTop: "20px",
+              }}
+            />
+          </Dropdown>
         </LayoutHeader>
         <BreadcrumbForManager />
         <LayoutContent className="site-layout-background">

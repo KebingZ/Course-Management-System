@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/img-redundant-alt */
 import React from "react";
 import { Card, Divider, Col, Row, Button } from "antd";
 import { UserOutlined, HeartFilled } from "@ant-design/icons";
@@ -10,7 +8,7 @@ export const timeUnit = {
   2: "months",
   3: "days",
 };
-const CourseCard = (data) => (
+const CourseCard = (props) => (
   <Card
     style={{
       width: 360,
@@ -18,36 +16,36 @@ const CourseCard = (data) => (
     }}
     cover={
       <img
-        alt="Course Image"
-        src={data?.cover}
+        alt="Course"
+        src={props.data?.cover}
         style={{ width: "100%", height: "200px" }}
       />
     }
   >
-    <h3>{data?.name}</h3>
+    <h3>{props.data?.name}</h3>
     <Row>
-      <Col span={12}>{data?.startTime}</Col>
+      <Col span={12}>{props.data?.startTime}</Col>
       <Col span={12} style={{ textAlign: "right" }}>
-        <HeartFilled style={{ color: "red" }} /> <b>{data?.star}</b>
+        <HeartFilled style={{ color: "red" }} /> <b>{props.data?.star}</b>
       </Col>
       <Divider />
       <Col span={12}>Duration:</Col>
       <Col span={12} style={{ textAlign: "right" }}>
         <b>
-          {data?.duration}{" "}
-          {data?.duration === 1
-            ? timeUnit[data?.durationUnit]?.substring(
+          {props.data?.duration}{" "}
+          {props.data?.duration === 1
+            ? timeUnit[props.data?.durationUnit]?.substring(
                 0,
-                timeUnit[data?.durationUnit]?.length - 1
+                timeUnit[props.data?.durationUnit]?.length - 1
               )
-            : timeUnit[data?.durationUnit]}
+            : timeUnit[props.data?.durationUnit]}
         </b>
       </Col>
       <Divider />
       <Col span={12}>Teacher:</Col>
       <Col span={12} style={{ textAlign: "right" }}>
         <b>
-          <a href="">{data?.teacherName}</a>
+          <a href={`/dashboard/manager/teachers/${props.data?.teacherId}`}>{props.data?.teacherName}</a>
         </b>
       </Col>
       <Divider />
@@ -55,11 +53,11 @@ const CourseCard = (data) => (
         <UserOutlined style={{ color: "rgb(24, 144, 255)" }} /> Student Limit:
       </Col>
       <Col span={12} style={{ textAlign: "right" }}>
-        <b>{data?.maxStudents}</b>
+        <b>{props.data?.maxStudents}</b>
       </Col>
     </Row>
     <Button type="primary" style={{ marginTop: "20px" }}>
-      <Link to={`${data?.id}`}>Read More</Link>
+      <Link to={`${props.data?.id}`}>Read More</Link>
     </Button>
   </Card>
 );

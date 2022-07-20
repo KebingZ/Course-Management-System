@@ -7,6 +7,7 @@ import Students from "./pages/students";
 import CourseList from "./pages/courses";
 import StudentDetailCard from "./component/studentDetail";
 import CourseDetailCard from "./component/courseDetail"
+import Message from "./pages/messages";
 
 export const manager = {
   path: "dashboard/manager",
@@ -72,6 +73,7 @@ export const manager = {
     {
       path: "messages",
       key: "Message",
+      element: <Message />
     },
   ],
 }
