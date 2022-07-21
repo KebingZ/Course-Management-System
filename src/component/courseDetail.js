@@ -90,11 +90,11 @@ const CourseDetailCard = () => {
       <Steps>
         {course?.schedule?.chapters?.map((item) => {
           if (item.order < checkProcess()) {
-            return <Step title={item.name} status="finish" />;
+            return <Step title={item.name} status="finish" key={item.name}/>;
           } else if (item.order === checkProcess()) {
-            return <Step title={item.name} status="process" />;
+            return <Step title={item.name} status="process" key={item.name} />;
           } else {
-            return <Step title={item.name} status="wait" />;
+            return <Step title={item.name} status="wait" key={item.name} />;
           }
         })}
       </Steps>

@@ -27,6 +27,7 @@ export default function Login() {
           JSON.stringify({
             role: response.data.role,
             token: response.data.token,
+            userId: response.data.userId,
           })
         );
         let history = createBrowserHistory();

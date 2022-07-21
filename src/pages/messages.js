@@ -17,11 +17,11 @@ const Message = () => {
   useEffect(() => {
     get(
       type === "all"
-        ? `message?limit=${10 * page}&page=1`
-        : `message?limit=${10 * page}&page=1&type=${type}`
+        ? `message?limit=10&page=${page}`
+        : `message?limit=10&page=${page}&type=${type}`
     ).then((response) => {
       setData(response.data);
-      setMessage(response.data.messages);
+      setMessage((message) => [...message, ...response.data.messages]);
     });
   }, [page, type]);
 
@@ -36,6 +36,7 @@ const Message = () => {
       return <h2>{item.createdAt.split(" ")[0]}</h2>;
     }
   };
+
   return (
     <div>
       <Row>
@@ -47,9 +48,13 @@ const Message = () => {
           <Select
             defaultValue="all"
             onChange={(value) => {
+              if (value !== type) {
+                setPage(1);
+                setMessage([])
+              }
               setType(value);
             }}
-            style={{width: "100px", textAlign: "center"}}
+            style={{ width: "100px", textAlign: "center" }}
           >
             <Select.Option value="all">All</Select.Option>
             <Select.Option value="notification">Notification</Select.Option>
@@ -80,11 +85,11 @@ const Message = () => {
           scrollableTarget="scrollableMessage"
         >
           <List
-            dataSource={data?.messages}
+            dataSource={message}
             itemLayout="vertical"
             renderItem={(item) => (
-              <List.Item key={item.id}>
-                {showTime(data?.messages, item)}
+              <List.Item key={item.nickname}>
+                {showTime(message, item)}
                 <List.Item.Meta
                   avatar={<Avatar icon={<UserOutlined />} />}
                   title={item.from.nickname}

@@ -4,6 +4,7 @@ import { get } from "../apiService";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { UserOutlined } from "@ant-design/icons";
 import { formatDistanceToNow } from "date-fns";
+import messageSSE from "./messageSSE";
 
 const { TabPane } = Tabs;
 
@@ -12,18 +13,32 @@ const MessageDropdown = () => {
   const [message, setMessage] = useState([]);
   const [page, setPage] = useState(1);
   const [tabKey, setTabKey] = useState("notification");
+  const evtSource = messageSSE();
   useEffect(() => {
-    get(`message?limit=${10 * page}&page=1&type=${tabKey}`).then((response) => {
+    get(`message?limit=10&page=${page}&type=${tabKey}`).then((response) => {
       setData(response.data);
-      setMessage(response.data.messages);
+      setMessage((message) => [...message, ...response.data.messages]);
     });
   }, [page, tabKey]);
+  useEffect(() => {
+    evtSource.addEventListener("message", (event) => {
+      let data = event.data;
+      data = JSON.parse(data);
+      if (data?.type === "message") {
+        setPage(1);
+      }
+    });
+  }, [evtSource]);
 
   return (
     <div style={{ marginTop: "5px" }}>
       <Tabs
         defaultActiveKey="notification"
         onChange={(key) => {
+          if (key !== tabKey) {
+            setPage(1);
+            setMessage([]);
+          }
           setTabKey(key);
         }}
         centered="true"
@@ -31,15 +46,13 @@ const MessageDropdown = () => {
         <TabPane tab="notification" key="notification"></TabPane>
         <TabPane tab="message" key="message"></TabPane>
       </Tabs>
-      <div
-        id="scrollableDrop"
-        style={{ marginLeft: "30px", overflow: "auto", height: "35vh" }}
-      >
+      <div id="scrollableDrop" style={{ overflow: "auto", height: "35vh" }}>
         <InfiniteScroll
           dataLength={message?.length}
           next={() => {
             setPage(page + 1);
           }}
+          height="35vh"
           hasMore={message?.length < data?.total}
           loader={
             <Skeleton
@@ -54,16 +67,19 @@ const MessageDropdown = () => {
           scrollableTarget="scrollableDrop"
         >
           <List
-            dataSource={data?.messages}
+            dataSource={message}
             itemLayout="vertical"
             renderItem={(item) => (
-              <List.Item key={item.id}>
+              <List.Item
+                key={item.nickname}
+                style={{ marginLeft: "20px", marginRight: "20px" }}
+              >
                 <List.Item.Meta
                   avatar={<Avatar icon={<UserOutlined />} />}
                   title={item.from.nickname}
                   description={item.content}
                 />
-                <div style={{marginLeft: "48px"}}>
+                <div style={{ marginLeft: "48px" }}>
                   {formatDistanceToNow(new Date(item.createdAt), {
                     addSuffix: true,
                   })}

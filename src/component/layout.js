@@ -4,9 +4,10 @@ import {
   MenuUnfoldOutlined,
   BellOutlined,
   UserOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
-import { Dropdown, Layout, Menu, Popover } from "antd";
-import React, { useState } from "react";
+import { Dropdown, Layout, Menu, Popover, notification } from "antd";
+import React, { useEffect, useState } from "react";
 import { createBrowserHistory } from "history";
 import { Outlet } from "react-router-dom";
 import { post } from "../apiService";
@@ -16,6 +17,7 @@ import { manager } from "../Routes";
 import SidebarGenerator, { getActiveKey } from "./sidebar";
 import { user } from "../App";
 import MessageDropdown from "./messageDropdown";
+import messageSSE from "./messageSSE";
 
 const { Header, Sider, Content } = Layout;
 
@@ -78,6 +80,22 @@ const LayoutPage = () => {
     : null;
   const selectedKeys = getActiveKey(path, manager.children)[0];
   const openKeys = getActiveKey(path, manager.children)[1];
+  const evtSource = messageSSE();
+  useEffect(() => {
+    evtSource.addEventListener("message", (event) => {
+      let data = event.data;
+      data = JSON.parse(data);
+      if (data?.type === "message") {
+        const args = {
+          message: `You have a message from ${data?.content.from.nickname}`,
+          description: <b>{data?.content.content}</b>,
+          duration: 4,
+          icon: <InfoCircleOutlined style={{ color: "#108ee9" }} />,
+        };
+        notification.open(args);
+      }
+    });
+  }, [evtSource]);
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <LayoutSider trigger={null} collapsible collapsed={collapsed}>
