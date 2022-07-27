@@ -5,6 +5,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { UserOutlined } from "@ant-design/icons";
 import { formatDistanceToNow } from "date-fns";
 import messageSSE from "./messageSSE";
+import { useMessage } from "../reducer";
 
 const { TabPane } = Tabs;
 
@@ -13,13 +14,27 @@ const MessageDropdown = () => {
   const [message, setMessage] = useState([]);
   const [page, setPage] = useState(1);
   const [tabKey, setTabKey] = useState("notification");
+  const {msgStore, dispatch} = useMessage();
   const evtSource = messageSSE();
   useEffect(() => {
     get(`message?limit=10&page=${page}&type=${tabKey}`).then((response) => {
       setData(response.data);
       setMessage((message) => [...message, ...response.data.messages]);
     });
-  }, [page, tabKey]);
+    get("message/statistics")
+      .then((response) => {
+  
+        dispatch({
+          type: "INC",
+          payload: { type: "message", count: response.data.receive.message.unread },
+        });
+        dispatch({
+          type: "INC",
+          payload: { type: "notification", count: response.data.receive.notification.unread },
+        });
+      })
+  }, [page, tabKey, dispatch]);
+
   useEffect(() => {
     evtSource.addEventListener("message", (event) => {
       let data = event.data;
@@ -28,6 +43,10 @@ const MessageDropdown = () => {
         setPage(1);
       }
     });
+
+    return () => {
+      evtSource.close();
+    };
   }, [evtSource]);
 
   return (

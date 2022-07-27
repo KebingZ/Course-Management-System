@@ -67,9 +67,10 @@ const CourseDetailCard = () => {
 
   const checkProcess = () => {
     if (course?.schedule?.current !== 0) {
-      return course?.schedule?.chapters?.filter(
+      const item = course?.schedule?.chapters?.filter(
         (item) => item?.id === course?.schedule?.current
-      )[0].order;
+      )
+      return (item[0]?.order ? item[0].order : null)
     }
   };
 

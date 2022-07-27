@@ -6,8 +6,9 @@ import Overview from "./pages/overview";
 import Students from "./pages/students";
 import CourseList from "./pages/courses";
 import StudentDetailCard from "./component/studentDetail";
-import CourseDetailCard from "./component/courseDetail"
+import CourseDetailCard from "./component/courseDetail";
 import Message from "./pages/messages";
+import AddCourse from "./pages/addCourse";
 
 export const manager = {
   path: "dashboard/manager",
@@ -54,15 +55,16 @@ export const manager = {
         {
           path: "",
           key: "All Courses",
-          element: <CourseList />
+          element: <CourseList />,
         },
         {
           path: ":id",
-          element: <CourseDetailCard />
+          element: <CourseDetailCard />,
         },
         {
           path: "add-course",
           key: "Add Course",
+          element: <AddCourse />,
         },
         {
           path: "edit-course",
@@ -73,18 +75,18 @@ export const manager = {
     {
       path: "messages",
       key: "Message",
-      element: <Message />
+      element: <Message />,
     },
   ],
-}
+};
 
 const getRoutes = (role) => {
-  if (role==="manager") return [manager]
-  else if (role==="student") return []
-  else if (role==="teacher") return []
-}
+  if (role === "manager") return [manager];
+  else if (role === "student") return [];
+  else if (role === "teacher") return [];
+};
 
-const RoutesTree = (user = null, role=null) => {
+const RoutesTree = (user = null, role = null) => {
   function PrivateRoute({ user, redirectPath = "/login" }) {
     if (!user) {
       return <Navigate to={redirectPath} replace />;
@@ -99,7 +101,7 @@ const RoutesTree = (user = null, role=null) => {
     },
     {
       element: <PrivateRoute user={user} />,
-      children: getRoutes(role)
+      children: getRoutes(role),
     },
   ];
 

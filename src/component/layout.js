@@ -6,8 +6,8 @@ import {
   UserOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
-import { Dropdown, Layout, Menu, Popover, notification } from "antd";
-import React, { useEffect, useState } from "react";
+import { Dropdown, Layout, Menu, Popover, notification, Badge } from "antd";
+import React, { useEffect, useState, useContext } from "react";
 import { createBrowserHistory } from "history";
 import { Outlet } from "react-router-dom";
 import { post } from "../apiService";
@@ -18,6 +18,7 @@ import SidebarGenerator, { getActiveKey } from "./sidebar";
 import { user } from "../App";
 import MessageDropdown from "./messageDropdown";
 import messageSSE from "./messageSSE";
+import { useMessage, MessageContext } from "../reducer";
 
 const { Header, Sider, Content } = Layout;
 
@@ -81,6 +82,8 @@ const LayoutPage = () => {
   const selectedKeys = getActiveKey(path, manager.children)[0];
   const openKeys = getActiveKey(path, manager.children)[1];
   const evtSource = messageSSE();
+  const { msgStore, dispatch } = useMessage();
+
   useEffect(() => {
     evtSource.addEventListener("message", (event) => {
       let data = event.data;
@@ -95,6 +98,9 @@ const LayoutPage = () => {
         notification.open(args);
       }
     });
+    return () => {
+      evtSource.close();
+    };
   }, [evtSource]);
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -137,30 +143,31 @@ const LayoutPage = () => {
               }}
             />
           </Popover>
-
-          <Dropdown
-            overlay={<MessageDropdown />}
-            overlayStyle={{
-              width: "20%",
-              height: "auto",
-              position: "fixed",
-              backgroundColor: "white",
-              color: "!important",
-              borderRadius: "5px",
-              margin: "10px",
-            }}
-            trigger={["click"]}
-          >
-            <BellOutlined
-              style={{
-                color: "white",
-                fontSize: "20px",
-                float: "right",
-                marginRight: "50px",
-                marginTop: "20px",
-              }}
-            />
-          </Dropdown>
+          <div style={{ float: "right", marginRight: "50px" }}>
+            <Badge size="small" count={msgStore?.total} offset={[10, 0]}>
+              {console.log(msgStore)}
+              <Dropdown
+                overlay={<MessageDropdown />}
+                overlayStyle={{
+                  width: "20%",
+                  height: "auto",
+                  position: "fixed",
+                  backgroundColor: "white",
+                  color: "!important",
+                  borderRadius: "5px",
+                  margin: "10px",
+                }}
+                trigger={["click"]}
+              >
+                <BellOutlined
+                  style={{
+                    color: "white",
+                    fontSize: "20px",
+                  }}
+                />
+              </Dropdown>
+            </Badge>
+          </div>
         </LayoutHeader>
         <BreadcrumbForManager />
         <LayoutContent className="site-layout-background">
