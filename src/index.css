@@ -11,3 +11,35 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+textarea#description.ant-input {
+  height: 290px
+}
+
+div.ant-upload-list.ant-upload-list-picture-card {
+  height: 300px;
+}
+div.ant-upload.ant-upload-select.ant-upload-select-picture-card {
+  height: 290px;
+  width: 500px;
+}
+span.ant-upload {
+  height: 290px;
+  width: 500px;
+}
+
+div.ant-upload-list-picture-card-container {
+  height: 290px;
+  width: 500px;
+}
+
+
+/* div.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  width: 100%;
+  height: 40px;
+  padding: 0 11px;
+}
+
+span.ant-select-selection-item {
+  top: 10%;
+} */

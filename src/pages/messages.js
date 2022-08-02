@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Col, Row, Skeleton, Divider, Select, List, Avatar } from "antd";
-import { get } from "../apiService";
+import { get, put } from "../apiService";
 import styled from "styled-components";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { UserOutlined } from "@ant-design/icons";
 import messageSSE from "../component/messageSSE";
-import { MessageContext, useMessage } from "../reducer";
+import { useMessage } from "../reducer";
 
 const Title = styled.h2`
   font-size: 30px;
@@ -16,7 +16,7 @@ const Message = () => {
   const [message, setMessage] = useState([]);
   const [page, setPage] = useState(1);
   const [type, setType] = useState("all");
-  const {msgStore, dispatch} = useMessage();
+  const { msgStore, dispatch } = useMessage();
   const evtSource = messageSSE();
 
   useEffect(() => {
@@ -28,8 +28,7 @@ const Message = () => {
       setData(response.data);
       setMessage((message) => [...message, ...response.data.messages]);
     });
-      
-  }, [page, type]);
+  }, [page, type, msgStore]);
 
   useEffect(() => {
     evtSource.addEventListener("message", (event) => {
@@ -37,7 +36,6 @@ const Message = () => {
       data = JSON.parse(data);
       if (data?.type === "message") {
         setPage(1);
-        dispatch({ type: "INC", payload: { type: "message", count: 1 } });
       }
     });
 
@@ -109,7 +107,26 @@ const Message = () => {
             dataSource={message}
             itemLayout="vertical"
             renderItem={(item) => (
-              <List.Item key={item.nickname}>
+              <List.Item
+                key={item.nickname}
+                style={{ opacity: item.status === 1 ? 0.4 : 1 }}
+                onClick={() => {
+                  if (item.status === 0) {
+                    put("message", {
+                      ids: [item.id],
+                      status: 1,
+                    }).then((response) => {
+                      if (response.data) {
+                        item.status = 1;
+                        dispatch({
+                          type: "DEC",
+                          payload: { type: item.type, count: 1 },
+                        });
+                      }
+                    });
+                  }
+                }}
+              >
                 {showTime(message, item)}
                 <List.Item.Meta
                   avatar={<Avatar icon={<UserOutlined />} />}

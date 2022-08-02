@@ -15,6 +15,7 @@ import styled from "styled-components";
 import { timeUnit } from "./courseCard";
 import { UserOutlined, HeartFilled } from "@ant-design/icons";
 import { colorArr } from "./studentDetail";
+import { user } from "../App";
 
 const { Panel } = Collapse;
 const { Step } = Steps;
@@ -217,7 +218,7 @@ const CourseDetailCard = () => {
             <Col span={12}>Teacher:</Col>
             <Col span={12} style={{ textAlign: "right" }}>
               <b>
-                <a href={`/dashboard/manager/teachers/${course?.teacherId}`}>
+                <a href={`/dashboard/${user.role}/teachers/${course?.teacherId}`}>
                   {course?.teacherName}
                 </a>
               </b>

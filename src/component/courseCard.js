@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Divider, Col, Row, Button } from "antd";
 import { UserOutlined, HeartFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { user } from "../App";
 
 export const timeUnit = {
   1: "years",
@@ -45,7 +46,7 @@ const CourseCard = (props) => (
       <Col span={12}>Teacher:</Col>
       <Col span={12} style={{ textAlign: "right" }}>
         <b>
-          <a href={`/dashboard/manager/teachers/${props.data?.teacherId}`}>{props.data?.teacherName}</a>
+          <a href={`/dashboard/${user.role}/teachers/${props.data?.teacherId}`}>{props.data?.teacherName}</a>
         </b>
       </Col>
       <Divider />

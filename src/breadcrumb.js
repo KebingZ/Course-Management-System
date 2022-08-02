@@ -2,16 +2,16 @@
 import { Breadcrumb } from "antd";
 import { user } from "./App";
 import { Link } from "react-router-dom";
-import { manager } from "./Routes";
 import { getActiveKey, searchKeys } from "./component/sidebar";
+import { getRoutes } from "./Routes";
 
-export const BreadcrumbForManager = () => {
+export const BreadcrumbForAll = () => {
   let pathname = window.location.pathname;
   const path = pathname.split(`${user.role}/`)[1]
     ? pathname.split(`${user.role}/`)[1]
     : null;
 
-  const noLinkNodes = getActiveKey(path, manager.children)[1];
+  const noLinkNodes = getActiveKey(path, getRoutes(user.role))[1];
 
   const breadcrumbGenerator = (data) => {
     if (path === null) {
@@ -23,7 +23,7 @@ export const BreadcrumbForManager = () => {
       keys = keys.slice(0, keys.length - 1);
       keys.push("");
     }
-    const nodes = searchKeys(keys, manager.children, []);
+    const nodes = searchKeys(keys, getRoutes(user.role), []);
     data = nodes.map((item) => {
       if (
         noLinkNodes?.includes(item) ||

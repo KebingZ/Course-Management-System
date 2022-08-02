@@ -5,20 +5,20 @@ import {
   BellOutlined,
   UserOutlined,
   InfoCircleOutlined,
+  LogoutOutlined
 } from "@ant-design/icons";
 import { Dropdown, Layout, Menu, Popover, notification, Badge } from "antd";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { createBrowserHistory } from "history";
 import { Outlet } from "react-router-dom";
-import { post } from "../apiService";
-import { BreadcrumbForManager } from "../breadcrumb";
+import { get, post } from "../apiService";
+import { BreadcrumbForAll } from "../breadcrumb";
 import styled from "styled-components";
-import { manager } from "../Routes";
 import SidebarGenerator, { getActiveKey } from "./sidebar";
-import { user } from "../App";
 import MessageDropdown from "./messageDropdown";
 import messageSSE from "./messageSSE";
-import { useMessage, MessageContext } from "../reducer";
+import { useMessage } from "../reducer";
+import { user } from "../App";
 
 const { Header, Sider, Content } = Layout;
 
@@ -72,22 +72,42 @@ const handleLogout = () => {
     });
 };
 
-const LayoutPage = () => {
+const LayoutPage = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const MenuFolder = collapsed ? MenuUnfoldOutlined : MenuFoldOutlined;
   let pathname = window.location.pathname;
   const path = pathname.split(`${user.role}/`)[1]
     ? pathname.split(`${user.role}/`)[1]
     : null;
-  const selectedKeys = getActiveKey(path, manager.children)[0];
-  const openKeys = getActiveKey(path, manager.children)[1];
+  const selectedKeys = getActiveKey(path, props?.roleTree)[0];
+  const openKeys = getActiveKey(path, props?.roleTree)[1];
   const evtSource = messageSSE();
   const { msgStore, dispatch } = useMessage();
 
   useEffect(() => {
+    get("message/statistics").then((response) => {
+      dispatch({
+        type: "RESET",
+      });
+      dispatch({
+        type: "INC",
+        payload: {
+          type: "message",
+          count: response.data.receive.message.unread,
+        },
+      });
+      dispatch({
+        type: "INC",
+        payload: {
+          type: "notification",
+          count: response.data.receive.notification.unread,
+        },
+      });
+    });
+  }, [dispatch]);
+  useEffect(() => {
     evtSource.addEventListener("message", (event) => {
-      let data = event.data;
-      data = JSON.parse(data);
+      const data = JSON.parse(event.data);
       if (data?.type === "message") {
         const args = {
           message: `You have a message from ${data?.content.from.nickname}`,
@@ -95,13 +115,24 @@ const LayoutPage = () => {
           duration: 4,
           icon: <InfoCircleOutlined style={{ color: "#108ee9" }} />,
         };
-        notification.open(args);
+
+        notification.open({
+          ...args,
+          style: {
+            zIndex: 999,
+          },
+        });
+        console.log(data);
+        dispatch({
+          type: "INC",
+          payload: { type: data?.content?.type, count: 1 },
+        });
       }
     });
     return () => {
       evtSource.close();
     };
-  }, [evtSource]);
+  }, [evtSource, dispatch]);
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <LayoutSider trigger={null} collapsible collapsed={collapsed}>
@@ -114,7 +145,7 @@ const LayoutPage = () => {
           selectedKeys={selectedKeys}
           defaultOpenKeys={openKeys ? openKeys : null}
         >
-          {manager.children.map((item) => SidebarGenerator(item))}
+          {props?.roleTree?.map((item) => SidebarGenerator(item))}
         </Menu>
       </LayoutSider>
       <Layout className="site-layout">
@@ -129,7 +160,7 @@ const LayoutPage = () => {
               color: "white",
             }}
           />
-          <Popover content={<a onClick={handleLogout}>Logout</a>}>
+          <Popover content={<a onClick={handleLogout}>{<LogoutOutlined style={{marginRight: "10px"}}/>}Logout</a>}>
             <UserOutlined
               style={{
                 backgroundColor: "grey",
@@ -145,7 +176,6 @@ const LayoutPage = () => {
           </Popover>
           <div style={{ float: "right", marginRight: "50px" }}>
             <Badge size="small" count={msgStore?.total} offset={[10, 0]}>
-              {console.log(msgStore)}
               <Dropdown
                 overlay={<MessageDropdown />}
                 overlayStyle={{
@@ -169,7 +199,7 @@ const LayoutPage = () => {
             </Badge>
           </div>
         </LayoutHeader>
-        <BreadcrumbForManager />
+        <BreadcrumbForAll />
         <LayoutContent className="site-layout-background">
           <Outlet />
         </LayoutContent>

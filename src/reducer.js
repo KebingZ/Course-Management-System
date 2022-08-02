@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, Dispatch } from "react";
+import { createContext, useContext, useReducer } from "react";
 
 export const initialState = { total: 0, notification: 0, message: 0 };
 export const MessageAction = {
@@ -21,6 +21,8 @@ export const reducer = (state = initialState, action = MessageAction) => {
         [action.payload.type]:
           state[action.payload.type] - action.payload.count,
       };
+    case "RESET":
+      return { ...initialState };
     default:
       return { ...state };
   }
@@ -28,10 +30,10 @@ export const reducer = (state = initialState, action = MessageAction) => {
 
 export const MessageContext = createContext({});
 export const MessageProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <MessageContext.Provider value={{ store: state, dispatch }}>
+    <MessageContext.Provider value={{ msgStore: state, dispatch }}>
       {children}
     </MessageContext.Provider>
   );

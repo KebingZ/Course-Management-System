@@ -12,6 +12,7 @@ import {
   ProjectOutlined,
   FileAddOutlined,
   EditOutlined,
+  CalendarOutlined
 } from "@ant-design/icons";
 
 const iconList = {
@@ -25,6 +26,7 @@ const iconList = {
   "Add Course": <FileAddOutlined />,
   "Edit Course": <EditOutlined />,
   Message: <MessageOutlined />,
+  "Class Schedule": <CalendarOutlined />
 };
 
 export const searchKeys = (path, data, keys) => {

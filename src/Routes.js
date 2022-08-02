@@ -9,81 +9,138 @@ import StudentDetailCard from "./component/studentDetail";
 import CourseDetailCard from "./component/courseDetail";
 import Message from "./pages/messages";
 import AddCourse from "./pages/addCourse";
+import EditCourse from "./pages/editCourse";
+import ClassSchedule from "./component/teacher/pages/classSchedule";
 
-export const manager = {
-  path: "dashboard/manager",
-  element: <LayoutPage />,
-  children: [
-    {
-      path: "",
-      key: "Overview",
-      element: <Overview />,
-    },
-    {
-      path: "students",
-      key: "Student",
-      element: <Students />,
-      children: [
-        {
-          path: "",
-          key: "Student List",
-          element: <StudentList />,
-        },
-        {
-          path: ":id",
-          element: <StudentDetailCard />,
-        },
-      ],
-    },
-    {
-      path: "teachers",
-      key: "Teacher",
-      children: [
-        {
-          path: "",
-          key: "Teacher List",
-        },
-        {
-          path: ":id",
-        },
-      ],
-    },
-    {
-      path: "courses",
-      key: "Course",
-      children: [
-        {
-          path: "",
-          key: "All Courses",
-          element: <CourseList />,
-        },
-        {
-          path: ":id",
-          element: <CourseDetailCard />,
-        },
-        {
-          path: "add-course",
-          key: "Add Course",
-          element: <AddCourse />,
-        },
-        {
-          path: "edit-course",
-          key: "Edit Course",
-        },
-      ],
-    },
-    {
-      path: "messages",
-      key: "Message",
-      element: <Message />,
-    },
-  ],
-};
+export const manager = [
+  {
+    path: "",
+    key: "Overview",
+    element: <Overview />,
+  },
+  {
+    path: "students",
+    key: "Student",
+    element: <Students />,
+    children: [
+      {
+        path: "",
+        key: "Student List",
+        element: <StudentList />,
+      },
+      {
+        path: ":id",
+        element: <StudentDetailCard />,
+      },
+    ],
+  },
+  {
+    path: "teachers",
+    key: "Teacher",
+    children: [
+      {
+        path: "",
+        key: "Teacher List",
+      },
+      {
+        path: ":id",
+      },
+    ],
+  },
+  {
+    path: "courses",
+    key: "Course",
+    children: [
+      {
+        path: "",
+        key: "All Courses",
+        element: <CourseList />,
+      },
+      {
+        path: ":id",
+        element: <CourseDetailCard />,
+      },
+      {
+        path: "add-course",
+        key: "Add Course",
+        element: <AddCourse />,
+      },
+      {
+        path: "edit-course",
+        key: "Edit Course",
+        element: <EditCourse />,
+      },
+    ],
+  },
+  {
+    path: "messages",
+    key: "Message",
+    element: <Message />,
+  },
+];
 
-const getRoutes = (role) => {
-  if (role === "manager") return [manager];
-  else if (role === "student") return [];
-  else if (role === "teacher") return [];
+export const teacher = [
+  {
+    path: "",
+    key: "Overview",
+  },
+  {
+    path: "schedule",
+    key: "Class Schedule",
+    element: <ClassSchedule />,
+  },
+  {
+    path: "students",
+    key: "Student",
+    element: <Students />,
+    children: [
+      {
+        path: "",
+        key: "Student List",
+      },
+    ],
+  },
+  {
+    path: "courses",
+    key: "Course",
+    children: [
+      {
+        path: "",
+        key: "All Courses",
+      },
+      {
+        path: ":id",
+        element: <CourseDetailCard />,
+      },
+      {
+        path: "add-course",
+        key: "Add Course",
+        element: <AddCourse />,
+      },
+      {
+        path: "edit-course",
+        key: "Edit Course",
+        element: <EditCourse />,
+      },
+    ],
+  },
+  {
+    path: "messages",
+    key: "Message",
+    element: <Message />,
+  },
+];
+
+export const getRoutes = (role) => {
+  switch (role) {
+    case "manager":
+      return manager;
+    case "teacher":
+      return teacher;
+    case "student":
+      return [];
+    default:
+  }
 };
 
 const RoutesTree = (user = null, role = null) => {
@@ -99,9 +156,16 @@ const RoutesTree = (user = null, role = null) => {
       path: "/login",
       element: <Login />,
     },
+
     {
       element: <PrivateRoute user={user} />,
-      children: getRoutes(role),
+      children: [
+        {
+          path: `dashboard/${role}`,
+          element: <LayoutPage roleTree={getRoutes(role)} />,
+          children: getRoutes(role),
+        },
+      ],
     },
   ];
 
