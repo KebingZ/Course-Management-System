@@ -3,10 +3,10 @@ import Login from "./pages/login";
 import LayoutPage from "./component/layout";
 import StudentList from "./component/lists/studentList";
 import Overview from "./pages/overview";
-import Students from "./pages/students";
-import CourseList from "./pages/courses";
-import StudentDetailCard from "./component/studentDetail";
-import CourseDetailCard from "./component/courseDetail";
+import Students from "./component/manager/pages/students";
+import CourseList from "./component/manager/pages/courses";
+import StudentDetailCard from "./component/studentDetail"
+import CourseDetailCard from "./pages/courseDetail";
 import Message from "./pages/messages";
 import AddCourse from "./pages/addCourse";
 import EditCourse from "./pages/editCourse";

@@ -1,4 +1,4 @@
-import { get } from "../apiService";
+import { get } from "../apiService"
 import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Progress } from "antd";
 import {
@@ -6,11 +6,11 @@ import {
   DeploymentUnitOutlined,
   ReadOutlined,
 } from "@ant-design/icons";
-import PieCharts from "../component/charts/pieCharts";
-import Polygon from "../component/charts/polygon";
-import ColumnChart from "../component/charts/columnChart";
-import HeatMap from "../component/charts/heatMap";
-import Map from "../component/charts/map";
+import PieCharts from "../component/manager/charts/pieCharts";
+import Polygon from "../component/manager/charts/polygon";
+import ColumnChart from "../component/manager/charts/columnChart"
+import HeatMap from "../component/manager/charts/heatMap";
+import Map from "../component/manager/charts/map";
 import styled from "styled-components";
 
 const ChartRow = styled(Row).attrs({
@@ -150,7 +150,7 @@ const Overview = () => {
                 <Col span={18}>
                   <TotalFont>TOTAL COURSES</TotalFont>
                   <Div>
-                    <DataFont style={{}}>{data?.course?.total}</DataFont>
+                    <DataFont>{data?.course?.total}</DataFont>
                   </Div>
                   <Progress
                     percent={
