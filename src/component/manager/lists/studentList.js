@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { formatDistanceToNow } from "date-fns";
 import { throttle } from "lodash";
-import { post, get, put, apiDelete } from "../../apiService";
+import { post, get, put, apiDelete } from "../../../apiService";
 import { useNavigate } from "react-router-dom";
 
 const StudentList = () => {

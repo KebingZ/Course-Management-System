@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import Login from "./pages/login";
 import LayoutPage from "./component/layout";
-import StudentList from "./component/lists/studentList";
+import StudentList from "./component/manager/lists/studentList";
 import Overview from "./pages/overview";
 import Students from "./component/manager/pages/students";
 import CourseList from "./component/manager/pages/courses";
