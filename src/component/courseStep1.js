@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { user } from "../App";
 import {
   Row,
   Col,
@@ -11,6 +12,7 @@ import {
   Modal,
   Button,
   message,
+  Spin,
 } from "antd";
 import { get, post, put } from "../apiService";
 import { throttle } from "lodash";
@@ -33,6 +35,8 @@ const FirstStep = (props = null) => {
   const [previewTitle, setPreviewTitle] = useState("");
   const [image, setImage] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState([]);
   const handleChange = ({ fileList: newFileList }) => setImage(newFileList);
   useEffect(() => {
     if (props.isEdit) {
@@ -44,9 +48,14 @@ const FirstStep = (props = null) => {
   const onSearch = useCallback(
     throttle((value) => {
       if (!value) return;
-      get(`teachers?query=${value}`).then((response) => {
-        setSearch(response.data);
-      });
+      setLoading(true);
+      get(`teachers?query=${value}`)
+        .then((response) => {
+          setSearch(response.data);
+        })
+        .then(() => {
+          setLoading(false);
+        });
     }, 1500),
     []
   );
@@ -159,6 +168,13 @@ const FirstStep = (props = null) => {
       setSkill(response.data);
     });
   }, []);
+  useEffect(() => {
+    if (user.role !== "manager") {
+      get(`teachers/${user.userId}`).then((response) => {
+        setUserData(response.data);
+      });
+    }
+  }, []);
   const courseCode = uuidv4();
 
   return (
@@ -198,12 +214,16 @@ const FirstStep = (props = null) => {
                       message: "please choose a teacher!",
                     },
                   ]}
+                  initialValue={user.role !== "manager" ? userData?.id : null}
                 >
                   <Select
                     showSearch
-                    placeholder="Select a teacher"
+                    placeholder={user.role==="manager" ? "Select a teacher" : userData?.name}
                     onSearch={onSearch}
                     optionFilterProp={"key"}
+                    disabled={user.role !== "manager"}
+                    // initialValue={user.role !== "manager" ? user.userId : null}
+                    notFoundContent={loading ? <Spin size="small" /> : null}
                   >
                     {search?.teachers?.map((item) => (
                       <Option key={item.name} value={item.id}>
@@ -336,7 +356,7 @@ const FirstStep = (props = null) => {
                   min: 100,
                   max: 1000,
                   message:
-                    "Description length must be between 100 - 100 characters!",
+                    "Description length must be between 100 - 1000 characters!",
                 },
               ]}
             >
@@ -385,11 +405,7 @@ const FirstStep = (props = null) => {
           </Col>
         </FormRow>
         <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="form-button"
-          >
+          <Button type="primary" htmlType="submit" className="form-button">
             {props.isEdit ? "Update Course" : "Create Course"}
           </Button>
         </Form.Item>

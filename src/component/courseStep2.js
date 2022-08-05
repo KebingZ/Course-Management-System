@@ -169,7 +169,6 @@ const SecondStep = (props = null) => {
                             message: "Missing first name",
                           },
                         ]}
-                        className="day"
                         key={key}
                       >
                         <Select
@@ -181,6 +180,7 @@ const SecondStep = (props = null) => {
                             });
                           }}
                           style={{height: "100%"}}
+                          placeholder="Select days"
                         >
                           {days.map((item) => (
                             <Option

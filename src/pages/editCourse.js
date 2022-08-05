@@ -1,4 +1,4 @@
-import { Row, Select, Tabs } from "antd";
+import { Row, Select, Tabs, Spin } from "antd";
 import { useState, useCallback } from "react";
 import { throttle } from "lodash";
 import { get } from "../apiService";
@@ -23,6 +23,7 @@ const EditCourse = () => {
   const [scheduleData, setScheduleData] = useState();
   const [courseId, setCourseId] = useState();
   const [step2Param, setStep2Param] = useState();
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleChange = (value) => {
     setSearchType(value);
@@ -30,9 +31,18 @@ const EditCourse = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onSearch = useCallback(
     throttle((value) => {
-      get(`courses?${searchType}=${value}`).then((response) => {
-        setSearch(response.data);
-      });
+      if (!value) {
+        setSearch([]);
+        return;
+      }
+      setIsSearching(true);
+      get(`courses`, { [searchType]: value })
+        .then((response) => {
+          setSearch(response.data);
+        })
+        .then(() => {
+          setIsSearching(false);
+        });
     }, 1000),
     [searchType]
   );
@@ -81,7 +91,7 @@ const EditCourse = () => {
             marginRight: "-1px",
           }}
           onChange={handleChange}
-          optionFilterProp="key"
+          optionFilterProp="value"
         >
           <Option key="code" value="uid">
             Code
@@ -98,6 +108,7 @@ const EditCourse = () => {
           style={{
             width: 740,
           }}
+          notFoundContent={isSearching ? <Spin size="small" /> : null}
           placeholder={`Search course by ${searchType}`}
           onSearch={onSearch}
           onChange={(value) => getItem(value)}

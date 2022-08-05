@@ -149,7 +149,7 @@ const LayoutPage = (props) => {
         </Menu>
       </LayoutSider>
       <Layout className="site-layout">
-        <LayoutHeader className="site-layout-background">
+        <LayoutHeader className="site-layout-background" style={{zIndex: 99}}>
           <MenuFolder
             className="trigger"
             key="trigger"

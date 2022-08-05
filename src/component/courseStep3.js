@@ -1,5 +1,6 @@
 import { Result, Button} from "antd";
 import { Link } from "react-router-dom";
+import { user } from "../App";
 
 const ThirdPage = (props = null) => {
   return (
@@ -8,12 +9,12 @@ const ThirdPage = (props = null) => {
       title="The Course Successfully Created!"
       extra={[
         <Button type="primary" key="goCourse">
-          <Link to={`/dashboard/manager/courses/${props.courseId}`}>
+          <Link to={`/dashboard/${user.role}/courses/${props.courseId}`}>
             Go Course
           </Link>
         </Button>,
         <Button key="addCourse">
-          <Link to="/dashboard/manager/courses/add-course">Create Again</Link>
+          <Link to={`/dashboard/${user.role}/courses/add-course`}>Create Again</Link>
         </Button>,
       ]}
       style={{ marginTop: "150px" }}
