@@ -12,25 +12,22 @@ code {
     monospace;
 }
 
-textarea#description.ant-input {
+textarea#detail.ant-input {
   height: 290px
 }
 
 div.ant-upload-list.ant-upload-list-picture-card {
   height: 300px;
 }
-div.ant-upload.ant-upload-select.ant-upload-select-picture-card {
+
+span.ant-upload-picture-card-wrapper.courseImg div.ant-upload.ant-upload-select.ant-upload-select-picture-card {
   height: 290px;
-  width: 500px;
-}
-span.ant-upload {
-  height: 290px;
-  width: 500px;
+  width: 518.98px;
 }
 
-div.ant-upload-list-picture-card-container {
+span.ant-upload-picture-card-wrapper.courseImg div.ant-upload-list.ant-upload-list-picture-card div.ant-upload-list-picture-card-container {
   height: 290px;
-  width: 500px;
+  width: 518.98px;
 }
 
 
@@ -47,4 +44,8 @@ div.ant-select.ant-select-in-form-item.day.ant-select-single.ant-select-show-arr
 div.ant-select.ant-select-in-form-item.day.ant-select-single.ant-select-show-arrow div.ant-select-selector span.ant-select-selection-placeholder {
   height: 40px;
   margin-top: 2%;
+}
+
+span.ant-upload-picture-card-wrapper.uploadImg {
+  height: 120px;
 }

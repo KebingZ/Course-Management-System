@@ -37,12 +37,8 @@ const SecondStep = (props = null) => {
   }, [form, props.isEdit, props.scheduleData, props.step2Param]);
   const onFinish = (value) => {
     put("courses/schedule", {
-      scheduleId: props.isEdit
-        ? props?.scheduleData?.scheduleId
-        : props.step2Param?.scheduleId,
-      courseId: props.isEdit
-        ? props?.scheduleData?.courseId
-        : props.step2Param?.courseId,
+      scheduleId: props.step2Param?.scheduleId,
+      courseId: props.step2Param?.courseId,
       chapters: value.chapter?.map((item, index) => {
         return { ...item, order: index + 1 };
       }),
@@ -142,7 +138,7 @@ const SecondStep = (props = null) => {
                         }}
                         block
                         icon={<PlusOutlined />}
-                        style={{height: "40px"}}
+                        style={{ height: "40px" }}
                       >
                         Add Chapter
                       </Button>
@@ -179,7 +175,7 @@ const SecondStep = (props = null) => {
                               [name]: value,
                             });
                           }}
-                          style={{height: "100%"}}
+                          style={{ height: "100%" }}
                           placeholder="Select days"
                         >
                           {days.map((item) => (

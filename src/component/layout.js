@@ -5,7 +5,8 @@ import {
   BellOutlined,
   UserOutlined,
   InfoCircleOutlined,
-  LogoutOutlined
+  LogoutOutlined,
+  ProfileOutlined,
 } from "@ant-design/icons";
 import { Dropdown, Layout, Menu, Popover, notification, Badge } from "antd";
 import React, { useEffect, useState } from "react";
@@ -84,6 +85,8 @@ const LayoutPage = (props) => {
   const evtSource = messageSSE();
   const { msgStore, dispatch } = useMessage();
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     get("message/statistics").then((response) => {
       dispatch({
@@ -149,7 +152,7 @@ const LayoutPage = (props) => {
         </Menu>
       </LayoutSider>
       <Layout className="site-layout">
-        <LayoutHeader className="site-layout-background" style={{zIndex: 99}}>
+        <LayoutHeader className="site-layout-background" style={{ zIndex: 99 }}>
           <MenuFolder
             className="trigger"
             key="trigger"
@@ -160,7 +163,22 @@ const LayoutPage = (props) => {
               color: "white",
             }}
           />
-          <Popover content={<a onClick={handleLogout}>{<LogoutOutlined style={{marginRight: "10px"}}/>}Logout</a>}>
+          <Popover
+            content={
+              <div>
+                {user.role !== "manager" ? (
+                  <a href={`/dashboard/${user.role}/profile`}>
+                    {<ProfileOutlined style={{ marginRight: "10px", marginBottom: "15px" }} />}Profile
+                  </a>
+                ) : null}
+                <br />
+                <a onClick={handleLogout}>
+                  {<LogoutOutlined style={{ marginRight: "10px" }} />}Logout
+                </a>
+              </div>
+            }
+            placement="bottom"
+          >
             <UserOutlined
               style={{
                 backgroundColor: "grey",
@@ -175,7 +193,7 @@ const LayoutPage = (props) => {
             />
           </Popover>
           <div style={{ float: "right", marginRight: "50px" }}>
-            <Badge size="small" count={msgStore?.total} offset={[10, 0]}>
+            <Badge size="small" count={msgStore?.total} offset={[5, 0]}>
               <Dropdown
                 overlay={<MessageDropdown />}
                 overlayStyle={{

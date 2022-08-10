@@ -29,6 +29,7 @@ export const colorArr = [
   "blue",
   "geekblue",
 ];
+export const genderList = { 1: "Male", 2: "Female" };
 
 const StudentDetailCard = () => {
   const [student, setStudent] = useState({});
@@ -50,7 +51,6 @@ const StudentDetailCard = () => {
       tab: "Courses",
     },
   ];
-  const genderList = { 1: "Male", 2: "Female" };
 
   const ofAbout = (
     <div>

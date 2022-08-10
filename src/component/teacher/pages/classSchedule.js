@@ -120,7 +120,7 @@ const ClassSchedule = () => {
     return result?.length ? (
       <>
         {result.map((course) => (
-          <FormRow key={course.id} style={{ marginBottom: "5px" }}>
+          <FormRow key={course.id} style={{ marginBottom: "5px", width: "100%" }}>
             <Col>
               <Tag
                 key={course.name}
@@ -154,17 +154,17 @@ const ClassSchedule = () => {
           <FormRow
             key={index}
             onClick={() => setInfo(item)}
-            style={{ marginBottom: "5px" }}
+            style={{ marginBottom: "5px", width: "100%" }}
           >
             <Col span={1}>
               <ClockCircleOutlined />
             </Col>
 
-            <Col span={8} offset={1}>
+            <Col span={8}>
               {item?.class?.time}
             </Col>
 
-            <Col offset={1}>
+            <Col style>
               <Tag
                 key={item.name}
                 color={colorArr[Math.floor(Math.random() * colorArr.length)]}

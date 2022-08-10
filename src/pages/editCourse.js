@@ -49,26 +49,35 @@ const EditCourse = () => {
   const getItem = (value) => {
     const item = search?.courses.filter((item) => item.name === value);
     get(`courses/schedule?courseId=${item[0].id}`).then((response) => {
+      const {
+        name,
+        uid,
+        detail,
+        price,
+        maxStudents,
+        duration,
+        cover,
+        teacherId,
+        id,
+      } = item[0];
       setDetailData({
-        courseName: item[0]?.name,
-        courseCode: item[0]?.uid,
-        description: item[0]?.detail,
+        name,
+        uid,
+        detail,
         startDate: moment(item[0]?.startTime?.split(" ")[0]),
-        price: item[0]?.price,
-        studentLimit: item[0]?.maxStudents,
-        duration: item[0]?.duration,
+        price,
+        maxStudents,
+        duration,
         suffixId: item[0]?.durationUnit,
-        cover: item[0]?.cover,
-        teacherId: item[0]?.teacherId,
+        cover,
+        teacherId,
         typeId: item[0]?.type?.map((item) => item.id),
-        id: item[0]?.id,
+        id,
         teacher: item[0]?.teacherName,
         type: item[0]?.type?.map((item) => item.name),
         suffix: timeStamps[item[0]?.durationUnit],
       });
       setScheduleData({
-        scheduleId: item[0]?.scheduleId,
-        courseId: item[0]?.id,
         chapter: response.data.chapters?.map((item) => {
           return { name: item.name, content: item.content };
         }),
@@ -78,6 +87,10 @@ const EditCourse = () => {
             time: new Date(`2022-08-01 ${item.split(" ")[1]}`),
           };
         }),
+      });
+      setStep2Param({
+        scheduleId: item[0]?.scheduleId,
+        courseId: item[0]?.id,
       });
     });
   };

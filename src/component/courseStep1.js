@@ -60,25 +60,29 @@ const FirstStep = (props = null) => {
     []
   );
   const onFinish = (value) => {
+    if (user.role !== "manager") {
+      value.teacher = user.userId;
+    }
+    const { name, uid, detail, price, maxStudents, duration, cover } = value;
     const course = {
-      name: value?.courseName,
-      uid: value?.courseCode,
-      detail: value?.description,
-      startTime: value?.startDate
-        ? value?.startDate.format("YYYY-MM-DD")
+      name,
+      uid,
+      detail,
+      startTime: value.startDate
+        ? value.startDate.format("YYYY-MM-DD")
         : moment().format("YYYY-MM-DD"),
-      price: value?.price,
-      maxStudents: value?.studentLimit,
-      duration: value?.duration,
-      durationUnit: !isNaN(parseInt(value?.suffix))
-        ? parseInt(value?.suffix)
+      price,
+      maxStudents,
+      duration,
+      durationUnit: !isNaN(parseInt(value.suffix))
+        ? parseInt(value.suffix)
         : parseInt(props.detailData?.suffixId),
-      cover: value?.cover,
-      teacherId: !isNaN(parseInt(value?.teacher))
-        ? value?.teacher
+      cover,
+      teacherId: !isNaN(parseInt(value.teacher))
+        ? value.teacher
         : props.detailData?.teacherId,
-      type: !isNaN(parseInt(value?.type))
-        ? value?.type
+      type: !isNaN(parseInt(value.type))
+        ? value.type
         : props.detailData?.typeId,
     };
     if (!props.isEdit) {
@@ -189,7 +193,7 @@ const FirstStep = (props = null) => {
           <Col span={8}>
             <Form.Item
               required
-              name="courseName"
+              name="name"
               label="Course Name"
               rules={[
                 {
@@ -205,31 +209,35 @@ const FirstStep = (props = null) => {
             <FormRow>
               <Col span={8} style={{ width: "100%" }}>
                 <Form.Item
-                  required
+                  required={user.role === "manager"}
                   name="teacher"
                   label="Teacher"
                   rules={[
                     {
-                      required: true,
+                      required: user.role === "manager",
                       message: "please choose a teacher!",
                     },
                   ]}
-                  initialValue={user.role !== "manager" ? userData?.id : null}
                 >
                   <Select
                     showSearch
-                    placeholder={user.role==="manager" ? "Select a teacher" : userData?.name}
+                    placeholder={
+                      user.role === "manager"
+                        ? "Select a teacher"
+                        : userData?.name
+                    }
                     onSearch={onSearch}
                     optionFilterProp={"key"}
                     disabled={user.role !== "manager"}
-                    // initialValue={user.role !== "manager" ? user.userId : null}
                     notFoundContent={loading ? <Spin size="small" /> : null}
                   >
-                    {search?.teachers?.map((item) => (
-                      <Option key={item.name} value={item.id}>
-                        {item.name}
-                      </Option>
-                    ))}
+                    {user.role === "manager"
+                      ? search?.teachers?.map((item) => (
+                          <Option key={item.name} value={item.id}>
+                            {item.name}
+                          </Option>
+                        ))
+                      : userData?.name}
                   </Select>
                 </Form.Item>
               </Col>
@@ -264,7 +272,7 @@ const FirstStep = (props = null) => {
               <Col span={8}>
                 <Form.Item
                   required
-                  name="courseCode"
+                  name="uid"
                   label="Course Code"
                   initialValue={!props.isEdit ? courseCode : null}
                 >
@@ -311,7 +319,7 @@ const FirstStep = (props = null) => {
             </Form.Item>
             <Form.Item
               required
-              name="studentLimit"
+              name="maxStudents"
               label="Student Limit"
               rules={[
                 {
@@ -348,7 +356,7 @@ const FirstStep = (props = null) => {
           </Col>
           <Col span={8}>
             <Form.Item
-              name="description"
+              name="detail"
               label="Description"
               rules={[
                 { required: true },
@@ -379,6 +387,7 @@ const FirstStep = (props = null) => {
                   listType="picture-card"
                   fileList={image}
                   onChange={handleChange}
+                  className="courseImg"
                 >
                   {image.length < 1 ? (
                     <div style={{ marginTop: "-20px" }}>

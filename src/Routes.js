@@ -5,12 +5,13 @@ import StudentList from "./component/manager/lists/studentList";
 import Overview from "./pages/overview";
 import Students from "./component/manager/pages/students";
 import CourseList from "./component/manager/pages/courses";
-import StudentDetailCard from "./component/studentDetail"
+import StudentDetailCard from "./component/studentDetail";
 import CourseDetailCard from "./pages/courseDetail";
 import Message from "./pages/messages";
 import AddCourse from "./pages/addCourse";
 import EditCourse from "./pages/editCourse";
 import ClassSchedule from "./component/teacher/pages/classSchedule";
+import Profile from "./pages/profile";
 
 export const manager = [
   {
@@ -90,6 +91,11 @@ export const teacher = [
     element: <ClassSchedule />,
   },
   {
+    path: "profile",
+    key: "Profile",
+    element: <Profile />,
+  },
+  {
     path: "students",
     key: "Student",
     element: <Students />,
@@ -131,6 +137,47 @@ export const teacher = [
   },
 ];
 
+const student = [
+  {
+    path: "",
+    key: "Overview",
+  },
+  {
+    path: "profile",
+    key: "Profile",
+    element: <Profile />,
+  },
+  {
+    path: "courses",
+    key: "Course",
+    children: [
+      {
+        path: "",
+        key: "All Courses",
+        element: <CourseList />,
+      },
+      {
+        path: ":id",
+        element: <CourseDetailCard />,
+      },
+      {
+        path: "own",
+        key: "My Courses",
+      },
+    ],
+  },
+  {
+    path: "schedule",
+    key: "Class Schedule",
+    element: <ClassSchedule />,
+  },
+  {
+    path: "messages",
+    key: "Message",
+    element: <Message />,
+  },
+];
+
 export const getRoutes = (role) => {
   switch (role) {
     case "manager":
@@ -138,7 +185,7 @@ export const getRoutes = (role) => {
     case "teacher":
       return teacher;
     case "student":
-      return [];
+      return student;
     default:
   }
 };

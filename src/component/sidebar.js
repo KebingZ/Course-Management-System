@@ -12,7 +12,7 @@ import {
   ProjectOutlined,
   FileAddOutlined,
   EditOutlined,
-  CalendarOutlined
+  CalendarOutlined,
 } from "@ant-design/icons";
 
 const iconList = {
@@ -26,7 +26,8 @@ const iconList = {
   "Add Course": <FileAddOutlined />,
   "Edit Course": <EditOutlined />,
   Message: <MessageOutlined />,
-  "Class Schedule": <CalendarOutlined />
+  "Class Schedule": <CalendarOutlined />,
+  "My Courses": <FileAddOutlined />,
 };
 
 export const searchKeys = (path, data, keys) => {
@@ -48,12 +49,9 @@ export const getActiveKey = (path, routes) => {
   }
   if (path.includes("/")) {
     const keys = path.split("/");
-    const length = keys.length
+    const length = keys.length;
     const openKeys = searchKeys(keys.slice(0, length - 1), routes, []);
-    if (
-      keys[length - 1] !== "" &&
-      isNaN(parseInt(keys[length - 1]))
-    ) {
+    if (keys[length - 1] !== "" && isNaN(parseInt(keys[length - 1]))) {
       const selectedKeys = keys[length - 1];
       return [[selectedKeys], openKeys];
     }
@@ -76,11 +74,11 @@ const SidebarGenerator = (element, parent = null) => {
         }
         return path;
       };
-      return (
+      return element?.key !== "Profile" ? (
         <Menu.Item key={key()} icon={iconList[element?.key]}>
           <Link to={path}>{element?.key}</Link>
         </Menu.Item>
-      );
+      ) : null;
     }
     return (
       <SubMenu
