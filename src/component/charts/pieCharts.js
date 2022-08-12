@@ -4,6 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 import { useEffect, useState } from "react";
 import { get } from "../../apiService";
 import styled from "styled-components";
+import { user } from "../../App";
 
 const ChartCard = styled(Card)`
   margin-top: 20px;
@@ -15,6 +16,7 @@ const PieCharts = () => {
   const [student, setStudent] = useState();
   const [teacher, setTeacher] = useState();
   const [selValue, setSelValue] = useState("student");
+  const [total, setTotal] = useState(0);
   const getData = (value) => {
     if (value === "gender") {
       get("statistics/overview").then((res) => {
@@ -23,16 +25,30 @@ const PieCharts = () => {
       });
     } else {
       get(`statistics/${value}`).then((res) => {
-        res.data.type.total = 0;
+        setTotal(0);
         res.data.type.forEach((item) => {
-          res.data.type.total += item.amount;
+          setTotal((total) => total + item.amount);
         });
         setData(res.data);
       });
     }
   };
+
+  const getTeacherPieData = () => {
+    get(`statistics/${user.role}?userId=${user.userId}`).then((response) => {
+      setData(response.data);
+      setTotal(0);
+      response.data.type?.forEach((item) =>
+        setTotal((total) => total + item.amount)
+      );
+    });
+  };
   useEffect(() => {
-    getData(selValue);
+    if (user.role === "manager") {
+      getData(selValue);
+    } else if (user.role === "teacher") {
+      getTeacherPieData();
+    }
   }, [selValue]);
 
   const title = {
@@ -47,9 +63,14 @@ const PieCharts = () => {
         plotShadow: false,
         type: "pie",
       },
-      title: {
-        text: title[selValue],
-      },
+      title:
+        user.role === "manager"
+          ? {
+              text: title[selValue],
+            }
+          : {
+              text: "Course Category",
+            },
 
       tooltip: {
         pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>",
@@ -81,7 +102,7 @@ const PieCharts = () => {
   const dualTypeData = data?.type?.map((item) => {
     return {
       name: item.name,
-      y: (item.amount / data.type.total) * 100,
+      y: (item.amount / total) * 100,
     };
   });
 
@@ -109,6 +130,19 @@ const PieCharts = () => {
     pieChart(genderData(student)),
     pieChart(genderData(teacher)),
   ];
+
+  if (user.role === "teacher") {
+    return (
+      <div>
+        <ChartCard title="Course Category">
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={pieChart(dualTypeData)}
+          />
+        </ChartCard>
+      </div>
+    );
+  }
 
   return (
     <div>

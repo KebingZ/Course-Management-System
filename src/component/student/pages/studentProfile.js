@@ -12,11 +12,17 @@ import {
   Tag,
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { useState } from "react";
+import { get } from "../../../apiService";
 import { FormRow } from "../../courseStep1";
 import { colorArr } from "../../studentDetail";
 import EditForm from "../../teacher/editForm";
 
 const StudentProfile = (props) => {
+  const [degree, setDegree] = useState();
+  get("degrees").then((response) => {
+    setDegree(response.data);
+  });
   return (
     <div>
       <Descriptions title="Member">
@@ -40,33 +46,11 @@ const StudentProfile = (props) => {
           >
             <Form.Item name="education" initialValue={props.data?.education}>
               <Select style={{ width: "100%" }}>
-                <Select.Option value="B.E." key="B.E.">
-                  B.E.
-                </Select.Option>
-                <Select.Option value="B.S." key="B.S.">
-                  B.S.
-                </Select.Option>
-                <Select.Option value="B.A." key="B.A.">
-                  B.A.
-                </Select.Option>
-                <Select.Option value="BEd" key="BEd">
-                  BEd
-                </Select.Option>
-                <Select.Option value="BBA" key="BBA">
-                  BBA
-                </Select.Option>
-                <Select.Option value="MA.Sc" key="MA.Sc">
-                  MA.Sc
-                </Select.Option>
-                <Select.Option value="MA.Eng" key="MA.Eng">
-                  MA.Eng
-                </Select.Option>
-                <Select.Option value="MBA" key="MBA">
-                  MBA
-                </Select.Option>
-                <Select.Option value="Ph.D" key="Ph.D">
-                  Ph.D
-                </Select.Option>
+                {degree?.map((item) => (
+                  <Select.Option value={item.short} key={item.short}>
+                    {item.short}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </EditForm>

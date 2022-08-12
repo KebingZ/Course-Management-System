@@ -13,12 +13,13 @@ const HeatMap = () => {
     var series = point.series,
       isY = dimension === "y",
       axis = series[isY ? "yAxis" : "xAxis"];
-    return axis.categories[point[isY ? "y" : "x"]];
+    return axis?.categories[point[isY ? "y" : "x"]];
   }
   const [course, setCourse] = useState();
   useEffect(() => {
     get("statistics/course").then((res) => {
       setCourse(res.data);
+      console.log(res.data)
     });
   }, []);
   const days = {
@@ -101,7 +102,7 @@ const HeatMap = () => {
         "Monday",
         "Tuesday",
         "Wednesday",
-        "Thurday",
+        "Thursday",
         "Friday",
         "Saturday",
         "Total",
@@ -165,7 +166,7 @@ const HeatMap = () => {
       ],
     },
   };
-
+console.log(data)
   return (
     <div>
       <Card title="Course Schedule">

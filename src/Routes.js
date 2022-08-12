@@ -12,6 +12,8 @@ import AddCourse from "./pages/addCourse";
 import EditCourse from "./pages/editCourse";
 import ClassSchedule from "./component/teacher/pages/classSchedule";
 import Profile from "./pages/profile";
+import TeacherOverview from "./component/teacher/pages/overview";
+import StudentOverview from "./component/student/pages/overview";
 
 export const manager = [
   {
@@ -84,6 +86,7 @@ export const teacher = [
   {
     path: "",
     key: "Overview",
+    element: <TeacherOverview />,
   },
   {
     path: "schedule",
@@ -141,6 +144,7 @@ const student = [
   {
     path: "",
     key: "Overview",
+    element: <StudentOverview />
   },
   {
     path: "profile",

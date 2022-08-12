@@ -6,6 +6,7 @@ import HighchartsReact from "highcharts-react-official";
 import { useEffect, useState } from "react";
 import { get } from "../../apiService";
 import styled from "styled-components";
+import { user } from "../../App";
 
 const ChartCard = styled(Card)`
   margin-top: 20px;
@@ -28,7 +29,7 @@ const Polygon = () => {
     "2022-12": "Dec",
   };
   const dataConvert = (data) => {
-    data?.createdAt.map((item) => {
+    data?.createdAt?.map((item) => {
       if (month[item.name]) {
         item.name = month[item.name];
       } else {
@@ -117,21 +118,28 @@ const Polygon = () => {
       },
     },
 
-    series: [
-      {
-        name: "student",
-        data: getValue(student),
-      },
-      {
-        name: "teacher",
-        data: getValue(teacher),
-      },
-      {
-        name: "course",
-        data: getValue(course),
-      },
-    ],
-
+    series:
+      user.role === "manager"
+        ? [
+            {
+              name: "student",
+              data: getValue(student),
+            },
+            {
+              name: "teacher",
+              data: getValue(teacher),
+            },
+            {
+              name: "course",
+              data: getValue(course),
+            },
+          ]
+        : [
+            {
+              name: "course",
+              data: getValue(teacher),
+            },
+          ],
     responsive: {
       rules: [
         {
@@ -152,7 +160,7 @@ const Polygon = () => {
 
   return (
     <div>
-      <ChartCard title="Increment">
+      <ChartCard title={user.role==="manager" ? "Increment" : "Course Increment"}>
         <HighchartsReact highcharts={Highcharts} options={polygonChart} />
       </ChartCard>
     </div>

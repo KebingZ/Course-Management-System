@@ -136,7 +136,7 @@ const TeacherProfile = (props) => {
             onSave={props.onSave}
           >
             <Form.Item
-              name="address"
+              name="description"
               initialValue={props.data?.description}
               style={{ width: "100%", marginLeft: "-5px" }}
             >

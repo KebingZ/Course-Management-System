@@ -13,25 +13,25 @@ import HeatMap from "../component/charts/heatMap";
 import Map from "../component/charts/map";
 import styled from "styled-components";
 
-const ChartRow = styled(Row).attrs({
+export const ChartRow = styled(Row).attrs({
   gutter: { xs: 8, sm: 16, md: 24, lg: 32 },
 })``;
 
-const TotalFont = styled.b`
+export const TotalFont = styled.b`
   color: white;
   font-size: 15px;
 `;
 
-const Div = styled.div`
+export const Div = styled.div`
   margin-top: 5px;
   margin-bottom: 5px;
 `;
 
-const DataFont = styled.b`
+export const DataFont = styled.b`
   font-size: 30px;
   color: white;
 `;
-const PercentageFont = styled.p`
+export const PercentageFont = styled.p`
   font-size: 15px;
   color: white;
   margin-top: 10px;
