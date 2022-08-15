@@ -49,7 +49,7 @@ const days = [
   "Saturday",
 ];
 
-const processTag = [
+export const processTag = [
   { text: "finished", color: "" },
   { text: "processing", color: "lime" },
   { text: "pending", color: "gold" },

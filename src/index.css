@@ -49,3 +49,8 @@ div.ant-select.ant-select-in-form-item.day.ant-select-single.ant-select-show-arr
 span.ant-upload-picture-card-wrapper.uploadImg {
   height: 120px;
 }
+
+#header {
+  background-color: #526480;
+  transition: all ease-in 1s;
+}

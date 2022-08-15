@@ -14,6 +14,13 @@ import ClassSchedule from "./component/teacher/pages/classSchedule";
 import Profile from "./pages/profile";
 import TeacherOverview from "./component/teacher/pages/overview";
 import StudentOverview from "./component/student/pages/overview";
+import { GalleryPage } from "./pages/gallery";
+import { EventPage } from "./pages/event";
+import { HomePage } from "./pages/home";
+import MyCourse from "./component/student/pages/course";
+import MyStudents from "./component/teacher/pages/students";
+import MyCourseList from "./component/teacher/pages/courses";
+import TeacherList from "./component/manager/lists/teacherList";
 
 export const manager = [
   {
@@ -44,6 +51,7 @@ export const manager = [
       {
         path: "",
         key: "Teacher List",
+        element: <TeacherList />,
       },
       {
         path: ":id",
@@ -106,6 +114,7 @@ export const teacher = [
       {
         path: "",
         key: "Student List",
+        element: <MyStudents />,
       },
     ],
   },
@@ -116,6 +125,7 @@ export const teacher = [
       {
         path: "",
         key: "All Courses",
+        element: <MyCourseList />,
       },
       {
         path: ":id",
@@ -144,7 +154,7 @@ const student = [
   {
     path: "",
     key: "Overview",
-    element: <StudentOverview />
+    element: <StudentOverview />,
   },
   {
     path: "profile",
@@ -167,6 +177,7 @@ const student = [
       {
         path: "own",
         key: "My Courses",
+        element: <MyCourse />,
       },
     ],
   },
@@ -203,6 +214,18 @@ const RoutesTree = (user = null, role = null) => {
   }
 
   const element = [
+    {
+      path: "",
+      element: <HomePage />,
+    },
+    {
+      path: "/gallery",
+      element: <GalleryPage />,
+    },
+    {
+      path: "events",
+      element: <EventPage />,
+    },
     {
       path: "/login",
       element: <Login />,

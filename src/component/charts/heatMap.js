@@ -19,7 +19,6 @@ const HeatMap = () => {
   useEffect(() => {
     get("statistics/course").then((res) => {
       setCourse(res.data);
-      console.log(res.data)
     });
   }, []);
   const days = {
@@ -166,7 +165,7 @@ const HeatMap = () => {
       ],
     },
   };
-console.log(data)
+
   return (
     <div>
       <Card title="Course Schedule">
